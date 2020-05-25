@@ -1,5 +1,6 @@
 package com.romoalamn.amf.setup;
 
+import com.romoalamn.amf.AMFMod;
 import com.romoalamn.amf.blocks.AMFBlocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class AMFCommonSetup {
     private static final Logger logger = LogManager.getLogger();
 
-    public static ItemGroup itemGroup = new ItemGroup("amf") {
+    public static ItemGroup itemGroup = new ItemGroup(AMFMod.MODID) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(AMFBlocks.cauldronBlock);
@@ -26,7 +27,6 @@ public class AMFCommonSetup {
 
     @SubscribeEvent
     public static void initCommon(final FMLCommonSetupEvent event) {
-        logger.info("Hello from initCommon");
     }
 
 }

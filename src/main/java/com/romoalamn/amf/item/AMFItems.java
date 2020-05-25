@@ -8,6 +8,4 @@ import net.minecraftforge.registries.ObjectHolder;
  * @deprecated
  */
 public class AMFItems {
-    @ObjectHolder("amf:firstitem")
-    public static BucketItem firstItem;
 }

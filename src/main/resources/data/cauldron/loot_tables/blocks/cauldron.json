@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "amf:cauldron"
+          "name": "cauldron:cauldron"
         }
       ]
     }

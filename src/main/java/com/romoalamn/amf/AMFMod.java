@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * The base class for my mod. Hooray!
  */
-@Mod("amf")
+@Mod(AMFMod.MODID)
 public class AMFMod {
     // Directly reference a log4j logger.
     /**
@@ -51,7 +51,7 @@ public class AMFMod {
     /**
      * Store our modid
      */
-    public static final String MODID = "amf";
+    public static final String MODID = "cauldron";
 
     /**
      * Setup listeners and register the fluid handler.
@@ -63,7 +63,7 @@ public class AMFMod {
         AMFFluids.registerFluidCreator(FMLJavaModLoadingContext.get().getModEventBus());
 
         AMFFluids.registerPot(new PotionType(Potions.REGENERATION, 30, PotionUtils.getPotionColor(Potions.REGENERATION))
-                .setRegistryName("amf:regen_pot_normal"));
+                .setRegistryName(AMFMod.MODID+ ":regen_pot_normal"));
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -90,7 +90,7 @@ public class AMFMod {
                         AMFFluids.registerBrewingRecipe(obj);
                     }
             )
-                    .setName(new ResourceLocation("amf", "set_brewing_recipes"))
+                    .setName(new ResourceLocation("cau", "set_brewing_recipes"))
                     .setType(CauldronBrewingRecipe.class)
                     .create();
 
@@ -100,7 +100,7 @@ public class AMFMod {
 //                        AMFFluids.registerPot(obj);
                     }
             ).allowModification()
-                    .setName(new ResourceLocation("amf", "fluid_register"))
+                    .setName(new ResourceLocation(AMFMod.MODID, "fluid_register"))
                     .setType(PotionType.class)
                     .create();
         }
@@ -168,14 +168,14 @@ public class AMFMod {
         public static void onBrewingRecipe(final RegistryEvent.Register<CauldronBrewingRecipe> cauldronRegister) {
             //first we register some potions
             LOGGER.info("Creating Potion Recipes");
-            PotionFluid regenPot = AMFFluids.getPotionFluid("amf:regen_pot_normal");
+            PotionFluid regenPot = AMFFluids.getPotionFluid(AMFMod.MODID + ":regen_pot_normal");
             LOGGER.info("The Source Block is: {}", regenPot.getSourcePotion().get());
             CauldronUtils.DelegatedOptional<Fluid> f = CauldronUtils.DelegatedOptional.of(() -> Fluids.WATER);
             cauldronRegister.getRegistry().register(
                     CauldronUtils.defaultAmountRecipe(f,
                             Tags.Items.STONE,
                             regenPot.getSourcePotion())
-                            .setRegistryName(new ResourceLocation("amf", "regen_recipe"))
+                            .setRegistryName(new ResourceLocation(AMFMod.MODID, "regen_recipe"))
             );
         }
         @SubscribeEvent
