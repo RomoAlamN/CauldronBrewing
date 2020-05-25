@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cauldron",
+  "textures": {
+    "particle": "minecraft:block/cauldron",
+    "all" : "minecraft:block/cauldron"
+  }
+}
