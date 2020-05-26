@@ -23,3 +23,10 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+
+*.zip
+gradlew
+gradlew.bat
+gradle/*
+README.txt
+mcmodsrepo/*
