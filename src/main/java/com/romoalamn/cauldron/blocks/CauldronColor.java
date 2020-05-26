@@ -1,6 +1,7 @@
 package com.romoalamn.cauldron.blocks;
 
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
+import com.romoalamn.cauldron.blocks.fluid.recipe.IPotionHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.potion.EffectInstance;
@@ -9,8 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,25 +34,21 @@ public class CauldronColor implements IBlockColor {
             logger.warn( npe);
             return 0xFFFFFFFF;
         }
-        logger.info("Got Tile Entity");
-        LazyOptional<IFluidHandler> handler = cauldron.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-        logger.info("Retrieved Fluid Handler");
+//        logger.info("Got Tile Entity");
+        LazyOptional<IPotionHandler> handler = cauldron.getCapability(CauldronCapabilities.POTION_HANDLER_CAPABILITY);
+//        logger.info("Retrieved Fluid Handler");
         class Here {
             int color = 0xFFFFFFFF;
         }
         Here here = new Here();
-        logger.info("Getting Color");
+//        logger.info("Getting Color");
         handler.ifPresent(h -> {
-            logger.info("Getting effects");
-            List<EffectInstance> effects = CauldronFluids.getPotionForLiquid(h.getFluidInTank(0)).getType().getParent();
-            logger.info(h.getFluidInTank(0).getFluid());
-            effects.forEach(e->{
-                String name = e.getEffectName();
-                logger.info("Effect: {}", name);
-            });
-            logger.info("Getting color from effects. ");
+//            logger.info("Getting effects");
+            List<EffectInstance> effects = h.getPotion().potion.getEffects();
+//            logger.info(h.getFluidInTank(0).getFluid());
+//            logger.info("Getting color from effects. ");
             here.color = PotionUtils.getPotionColorFromEffectList(effects);
-            logger.info("Color retrieved was: {}", Integer.toString(here.color, 16));
+//            logger.info("Color retrieved was: {}", Integer.toString(here.color, 16));
         }
         );
         return here.color;

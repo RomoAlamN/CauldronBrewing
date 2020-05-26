@@ -1,6 +1,9 @@
 {
   "block.cauldron.cauldron": "Brewing Cauldron",
   "itemGroup.cauldron": "Cauldron Brewing",
+
+  "cauldron.resources": "Cauldron Potion Resources",
+
   "cauldron.potion.of.effect.minecraft.speed": "Potion of Swiftness",
   "cauldron.potion.of.effect.minecraft.jump_boost": "Potion of Jump Boost",
   "cauldron.potion.of.effect.minecraft.instant_health": "Potion of Instant Heath",

@@ -1,10 +1,11 @@
 package com.romoalamn.cauldron.blocks;
 
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
+import com.romoalamn.cauldron.blocks.fluid.recipe.IPotionHandler;
+import com.romoalamn.cauldron.blocks.fluid.recipe.PotionHandler;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -20,10 +21,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -39,14 +37,18 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
     private static final Logger logger = LogManager.getLogger();
 
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
-    private final LazyOptional<IFluidHandler> fluids = LazyOptional.of(this::createFluidHandler);
+    private final LazyOptional<IPotionHandler> potions = LazyOptional.of(this::createPotionHandler);
+
 
     public CauldronTile() {
         super(CauldronBlocks.cauldronBlockTile);
+//        EntityDataManager.createKey(getClass())
+
     }
 
     @Override
     public void tick() {
+
     }
 
     @SuppressWarnings("unchecked")
@@ -54,8 +56,8 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
     public void read(CompoundNBT tag) {
         CompoundNBT invTag = tag.getCompound("inv");
         handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
-        CompoundNBT fluidTag = tag.getCompound("fluid");
-        fluids.ifPresent(h -> ((FluidTank)h).readFromNBT(fluidTag));
+        CompoundNBT fluidTag = tag.getCompound("potion");
+        potions.ifPresent(h -> ((PotionHandler)h).readFromNBT(fluidTag));
         super.read(tag);
     }
 
@@ -68,11 +70,10 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
             CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
             tag.put("inv", compound);
         });
-        fluids.ifPresent(h-> {
+        potions.ifPresent(h-> {
             CompoundNBT t = new CompoundNBT();
-
-            ((FluidTank)h).writeToNBT(t);
-            tag.put("fluid", t);
+            ((PotionHandler)h).writeToNBT(t);
+            tag.put("potion", t);
         });
         return super.write(tag);
     }
@@ -94,23 +95,18 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
             }
         };
     }
-
-    private IFluidHandler createFluidHandler() {
-        return new FluidTank(1000){
-            @Override
-            public boolean isFluidValid(@Nonnull FluidStack stack) {
-                return (CauldronFluids.isPotion(stack) | stack.getFluid() == Fluids.WATER);
-            }
-        };
+    private IPotionHandler createPotionHandler(){
+        return new PotionHandler(FluidAttributes.BUCKET_VOLUME);
     }
+
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return handler.cast();
-        }else if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return fluids.cast();
+        }else if(cap == CauldronCapabilities.POTION_HANDLER_CAPABILITY) {
+            return potions.cast();
         }
         return super.getCapability(cap, side);
     }
@@ -128,6 +124,42 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
     }
 
     /**
+     * Get an NBT compound to sync to the client with SPacketChunkData, used for initial loading of the chunk or when
+     * many blocks change at once. This compound comes back to you clientside in
+     */
+    @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT base = new CompoundNBT();
+        base.put("basic", super.getUpdateTag());
+        base.put("cauldron", write(new CompoundNBT()));
+        return base;
+    }
+
+    /**
+     * Called when the chunk's TE update tag, gotten from {@link #getUpdateTag()}, is received on the client.
+     * <p>
+     * Used to handle this tag in a special way. By default this simply calls
+     *
+     * @param tag The
+     */
+    @Override
+    public void handleUpdateTag(CompoundNBT tag) {
+        super.handleUpdateTag(tag);
+        this.read((CompoundNBT) tag.get("caul"));
+        logger.info("Received Update Packet from server! {!}");
+    }
+
+    /**
+     * Retrieves packet to send to the client whenever this Tile Entity is re-synced via World.notifyBlockUpdate. For
+     * modded TE's, this packet comes back to you clientside in {@link #onDataPacket}
+     */
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 0, getUpdateTag());
+    }
+
+    /**
      * Called when you receive a TileEntityData packet for the location this
      * TileEntity is currently in. On the client, the NetworkManager will always
      * be the remote server. On the server, it will be whomever is responsible for
@@ -138,20 +170,9 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+        super.onDataPacket(net, new SUpdateTileEntityPacket(pkt.getPos(), 0,(CompoundNBT)pkt.getNbtCompound().get("base")));
+        CompoundNBT caul =  (CompoundNBT) pkt.getNbtCompound().get("cauldron");
+        this.read(caul);
         logger.info("Received Update Packet from server! {!}");
-        super.onDataPacket(net, pkt);
-    }
-
-    /**
-     * Retrieves packet to send to the client whenever this Tile Entity is re-synced via World.notifyBlockUpdate. For
-     * modded TE's, this packet comes back to you clientside in {@link #onDataPacket}
-     */
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return new SUpdateTileEntityPacket(getPos(), 0, nbt);
     }
 }

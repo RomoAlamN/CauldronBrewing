@@ -55,92 +55,8 @@ public class CauldronMod {
     public CauldronMod() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-
-        CauldronFluids.registerFluidCreator(FMLJavaModLoadingContext.get().getModEventBus());
-        createFluids();
     }
 
-    private void createFluids() {
-
-        CauldronFluids.registerPot(new PotionType(Potions.SWIFTNESS)
-                .setRegistryName(CauldronMod.MODID, "swiftness"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_SWIFTNESS)
-                .setRegistryName(CauldronMod.MODID , "long_swiftness"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_SWIFTNESS)
-                .setRegistryName(CauldronMod.MODID, "strong_swiftness"));
-        CauldronFluids.registerPot(new PotionType(Potions.LEAPING)
-                .setRegistryName(CauldronMod.MODID , "leaping"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_LEAPING)
-                .setRegistryName(CauldronMod.MODID, "long_leaping"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_LEAPING)
-                .setRegistryName(CauldronMod.MODID , "strong_leaping"));
-        CauldronFluids.registerPot(new PotionType(Potions.HEALING)
-                .setRegistryName(CauldronMod.MODID, "healing"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_HEALING)
-                .setRegistryName(CauldronMod.MODID , "strong_healing"));
-        CauldronFluids.registerPot(new PotionType(Potions.POISON)
-                .setRegistryName(CauldronMod.MODID, "poison"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_POISON)
-                .setRegistryName(CauldronMod.MODID , "long_poison"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_POISON)
-                .setRegistryName(CauldronMod.MODID, "strong_poison"));
-        CauldronFluids.registerPot(new PotionType(Potions.WATER_BREATHING)
-                .setRegistryName(CauldronMod.MODID , "water_breathing"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_WATER_BREATHING)
-                .setRegistryName(CauldronMod.MODID, "long_water_breathing"));
-        CauldronFluids.registerPot(new PotionType(Potions.FIRE_RESISTANCE)
-                .setRegistryName(CauldronMod.MODID , "fire_resistance"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_FIRE_RESISTANCE)
-                .setRegistryName(CauldronMod.MODID, "long_fire_resistance"));
-        CauldronFluids.registerPot(new PotionType(Potions.NIGHT_VISION)
-                .setRegistryName(CauldronMod.MODID , "night_vision"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_NIGHT_VISION)
-                .setRegistryName(CauldronMod.MODID, "long_night_vision"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRENGTH)
-                .setRegistryName(CauldronMod.MODID , "strength"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_STRENGTH)
-                .setRegistryName(CauldronMod.MODID, "long_strength"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_STRENGTH)
-                .setRegistryName(CauldronMod.MODID , "strong_strength"));
-        CauldronFluids.registerPot(new PotionType(Potions.REGENERATION)
-                .setRegistryName(CauldronMod.MODID , "regeneration"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_REGENERATION)
-                .setRegistryName(CauldronMod.MODID, "long_regeneration"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_REGENERATION)
-                .setRegistryName(CauldronMod.MODID , "strong_regeneration"));
-        CauldronFluids.registerPot(new PotionType(Potions.TURTLE_MASTER)
-                .setRegistryName(CauldronMod.MODID, "turtle_master"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_TURTLE_MASTER)
-                .setRegistryName(CauldronMod.MODID , "long_turtle_master"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_TURTLE_MASTER)
-                .setRegistryName(CauldronMod.MODID, "strong_turtle_master"));
-        CauldronFluids.registerPot(new PotionType(Potions.SLOW_FALLING)
-                .setRegistryName(CauldronMod.MODID , "slow_falling"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_SLOW_FALLING)
-                .setRegistryName(CauldronMod.MODID, "long_slow_falling"));
-        CauldronFluids.registerPot(new PotionType(Potions.SLOWNESS)
-                .setRegistryName(CauldronMod.MODID , "slowness"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_SLOWNESS)
-                .setRegistryName(CauldronMod.MODID, "long_slowness"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_SLOWNESS)
-                .setRegistryName(CauldronMod.MODID, "strong_slowness"));
-        CauldronFluids.registerPot(new PotionType(Potions.HARMING)
-                .setRegistryName(CauldronMod.MODID, "harming"));
-        CauldronFluids.registerPot(new PotionType(Potions.STRONG_HARMING)
-                .setRegistryName(CauldronMod.MODID, "strong_harming"));
-        CauldronFluids.registerPot(new PotionType(Potions.INVISIBILITY)
-                .setRegistryName(CauldronMod.MODID, "invisibility"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_INVISIBILITY)
-                .setRegistryName(CauldronMod.MODID, "long_invisibility"));
-        CauldronFluids.registerPot(new PotionType(Potions.WEAKNESS)
-                .setRegistryName(CauldronMod.MODID, "weakness"));
-        CauldronFluids.registerPot(new PotionType(Potions.LONG_WEAKNESS)
-                .setRegistryName(CauldronMod.MODID, "long_weakness"));
-        CauldronFluids.registerPot(new PotionType(Potions.AWKWARD)
-        .setRegistryName(CauldronMod.MODID, "awkward"));
-
-
-    }
 
     private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
@@ -162,12 +78,19 @@ public class CauldronMod {
             LOGGER.info("Creating Potion Registry");
             new RegistryBuilder<CauldronBrewingRecipe>().add(
                     (IForgeRegistry.AddCallback<CauldronBrewingRecipe>) (owner, stage, id, obj, oldObj) -> {
-                        LOGGER.info("Registry Add Called");
+//                        LOGGER.info("Registry Add Called");
                         CauldronFluids.registerBrewingRecipe(obj);
                     }
             )
-                    .setName(new ResourceLocation("cau", "set_brewing_recipes"))
+                    .setName(new ResourceLocation("cauldron", "set_brewing_recipes"))
                     .setType(CauldronBrewingRecipe.class)
+                    .create();
+            new RegistryBuilder<PotionType>().add(
+                    (IForgeRegistry.AddCallback<PotionType>) (owner, stage, id, obj, oldObj) -> {
+                        CauldronFluids.registerPot(obj);
+                    }
+            ).setName(new ResourceLocation("cauldron", "register_potion_types"))
+                    .setType(PotionType.class)
                     .create();
 
         }
@@ -201,8 +124,8 @@ public class CauldronMod {
                     .setRegistryName("cauldron"));
             itemRegistryEvent.getRegistry().register(new CauldronItemPotion(
                     new Item.Properties()
-                    .maxStackSize(1)
-                    .group(CauldronCommonSetup.itemGroup)
+                            .maxStackSize(1)
+                            .group(CauldronCommonSetup.itemGroup)
             ).setRegistryName(CauldronMod.MODID, "potion"));
 
 //            itemRegistryEvent.getRegistry().register(new FirstItem().setRegistryName("firstitem"));
@@ -235,6 +158,95 @@ public class CauldronMod {
                         return new CauldronContainer(windowId, Objects.requireNonNull(Minecraft.getInstance().world), pos, inv);
                     }))
                     .setRegistryName("cauldron"));
+        }
+
+        @SubscribeEvent
+        public static void onPotionRegister(final RegistryEvent.Register<PotionType> potionTypeRegister){
+            IForgeRegistry<PotionType> registry = potionTypeRegister.getRegistry();
+            registerPotions(registry);
+
+        }
+        private static void registerPotions(IForgeRegistry<PotionType> registry){
+            registry.register(new PotionType(Potions.WATER)
+            .setRegistryName(new ResourceLocation(CauldronMod.MODID, "potion_water")));
+
+            registry.register(new PotionType(Potions.SWIFTNESS)
+                    .setRegistryName(CauldronMod.MODID, "swiftness"));
+            registry.register(new PotionType(Potions.LONG_SWIFTNESS)
+                    .setRegistryName(CauldronMod.MODID, "long_swiftness"));
+            registry.register(new PotionType(Potions.STRONG_SWIFTNESS)
+                    .setRegistryName(CauldronMod.MODID, "strong_swiftness"));
+            registry.register(new PotionType(Potions.LEAPING)
+                    .setRegistryName(CauldronMod.MODID, "leaping"));
+            registry.register(new PotionType(Potions.LONG_LEAPING)
+                    .setRegistryName(CauldronMod.MODID, "long_leaping"));
+            registry.register(new PotionType(Potions.STRONG_LEAPING)
+                    .setRegistryName(CauldronMod.MODID, "strong_leaping"));
+            registry.register(new PotionType(Potions.HEALING)
+                    .setRegistryName(CauldronMod.MODID, "healing"));
+            registry.register(new PotionType(Potions.STRONG_HEALING)
+                    .setRegistryName(CauldronMod.MODID, "strong_healing"));
+            registry.register(new PotionType(Potions.POISON)
+                    .setRegistryName(CauldronMod.MODID, "poison"));
+            registry.register(new PotionType(Potions.LONG_POISON)
+                    .setRegistryName(CauldronMod.MODID, "long_poison"));
+            registry.register(new PotionType(Potions.STRONG_POISON)
+                    .setRegistryName(CauldronMod.MODID, "strong_poison"));
+            registry.register(new PotionType(Potions.WATER_BREATHING)
+                    .setRegistryName(CauldronMod.MODID, "water_breathing"));
+            registry.register(new PotionType(Potions.LONG_WATER_BREATHING)
+                    .setRegistryName(CauldronMod.MODID, "long_water_breathing"));
+            registry.register(new PotionType(Potions.FIRE_RESISTANCE)
+                    .setRegistryName(CauldronMod.MODID, "fire_resistance"));
+            registry.register(new PotionType(Potions.LONG_FIRE_RESISTANCE)
+                    .setRegistryName(CauldronMod.MODID, "long_fire_resistance"));
+            registry.register(new PotionType(Potions.NIGHT_VISION)
+                    .setRegistryName(CauldronMod.MODID, "night_vision"));
+            registry.register(new PotionType(Potions.LONG_NIGHT_VISION)
+                    .setRegistryName(CauldronMod.MODID, "long_night_vision"));
+            registry.register(new PotionType(Potions.STRENGTH)
+                    .setRegistryName(CauldronMod.MODID, "strength"));
+            registry.register(new PotionType(Potions.LONG_STRENGTH)
+                    .setRegistryName(CauldronMod.MODID, "long_strength"));
+            registry.register(new PotionType(Potions.STRONG_STRENGTH)
+                    .setRegistryName(CauldronMod.MODID, "strong_strength"));
+            registry.register(new PotionType(Potions.REGENERATION)
+                    .setRegistryName(CauldronMod.MODID, "regeneration"));
+            registry.register(new PotionType(Potions.LONG_REGENERATION)
+                    .setRegistryName(CauldronMod.MODID, "long_regeneration"));
+            registry.register(new PotionType(Potions.STRONG_REGENERATION)
+                    .setRegistryName(CauldronMod.MODID, "strong_regeneration"));
+            registry.register(new PotionType(Potions.TURTLE_MASTER)
+                    .setRegistryName(CauldronMod.MODID, "turtle_master"));
+            registry.register(new PotionType(Potions.LONG_TURTLE_MASTER)
+                    .setRegistryName(CauldronMod.MODID, "long_turtle_master"));
+            registry.register(new PotionType(Potions.STRONG_TURTLE_MASTER)
+                    .setRegistryName(CauldronMod.MODID, "strong_turtle_master"));
+            registry.register(new PotionType(Potions.SLOW_FALLING)
+                    .setRegistryName(CauldronMod.MODID, "slow_falling"));
+            registry.register(new PotionType(Potions.LONG_SLOW_FALLING)
+                    .setRegistryName(CauldronMod.MODID, "long_slow_falling"));
+            registry.register(new PotionType(Potions.SLOWNESS)
+                    .setRegistryName(CauldronMod.MODID, "slowness"));
+            registry.register(new PotionType(Potions.LONG_SLOWNESS)
+                    .setRegistryName(CauldronMod.MODID, "long_slowness"));
+            registry.register(new PotionType(Potions.STRONG_SLOWNESS)
+                    .setRegistryName(CauldronMod.MODID, "strong_slowness"));
+            registry.register(new PotionType(Potions.HARMING)
+                    .setRegistryName(CauldronMod.MODID, "harming"));
+            registry.register(new PotionType(Potions.STRONG_HARMING)
+                    .setRegistryName(CauldronMod.MODID, "strong_harming"));
+            registry.register(new PotionType(Potions.INVISIBILITY)
+                    .setRegistryName(CauldronMod.MODID, "invisibility"));
+            registry.register(new PotionType(Potions.LONG_INVISIBILITY)
+                    .setRegistryName(CauldronMod.MODID, "long_invisibility"));
+            registry.register(new PotionType(Potions.WEAKNESS)
+                    .setRegistryName(CauldronMod.MODID, "weakness"));
+            registry.register(new PotionType(Potions.LONG_WEAKNESS)
+                    .setRegistryName(CauldronMod.MODID, "long_weakness"));
+            registry.register(new PotionType(Potions.AWKWARD)
+                    .setRegistryName(CauldronMod.MODID, "awkward"));
+
         }
 
         @SubscribeEvent

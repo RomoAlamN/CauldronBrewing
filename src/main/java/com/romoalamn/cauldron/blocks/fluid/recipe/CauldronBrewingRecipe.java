@@ -1,9 +1,9 @@
 package com.romoalamn.cauldron.blocks.fluid.recipe;
 
+import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -45,8 +45,8 @@ public class CauldronBrewingRecipe implements IForgeRegistryEntry<CauldronBrewin
      * @param stack the stack to check equality on
      * @return whether or not the two fluids are the same type
      */
-    public boolean isInput(@Nonnull FluidStack stack) {
-        return stack.getFluid() == input.item.get();
+    public boolean isInput(@Nonnull PotionType stack) {
+        return stack == input.potion;
     }
 
     /**
@@ -55,11 +55,11 @@ public class CauldronBrewingRecipe implements IForgeRegistryEntry<CauldronBrewin
      * @param ingredient The item in the player's hand
      * @return the fluid that corresponds to the recipe above
      */
-    public FluidStack getOutput(FluidStack input, ItemStack ingredient) {
-        if(isInput(input) && isIngredient(ingredient) && input.getAmount() > this.input.amount){
-            return new FluidStack(getOutput().item.get(), getOutput().amount);
+    public CauldronUtils.FluidComponent getOutput(CauldronUtils.FluidComponent input, ItemStack ingredient) {
+        if(isInput(input.potion) && isIngredient(ingredient) && input.amount > this.input.amount){
+            return new CauldronUtils.FluidComponent(getOutput().potion, getOutput().amount);
         }else{
-            return FluidStack.EMPTY;
+            return CauldronUtils.FluidComponent.EMPTY;
         }
     }
 

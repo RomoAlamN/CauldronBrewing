@@ -2,6 +2,7 @@ package com.romoalamn.cauldron.setup;
 
 import com.romoalamn.cauldron.CauldronMod;
 import com.romoalamn.cauldron.blocks.CauldronBlocks;
+import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,6 +27,7 @@ public class CauldronCommonSetup {
 
     @SubscribeEvent
     public static void initCommon(final FMLCommonSetupEvent event) {
+        CauldronCapabilities.register();
     }
 
 }

@@ -12,17 +12,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod.EventBusSubscriber(value= Dist.CLIENT, bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CauldronClientSetup {
 
     private static final Logger logger = LogManager.getLogger();
-
     @SubscribeEvent
-    public static void init(final FMLCommonSetupEvent event){
-
-        logger.info("Init for client?");
+    public static void init(final FMLCommonSetupEvent event) {
+        logger.info("Cauldron Mod Client initialization ...");
         Minecraft.getInstance().getBlockColors().register(new CauldronColor(), CauldronBlocks.cauldronBlock);
         Minecraft.getInstance().getItemColors().register(new CauldronItemPotion.PotionColor(), CauldronItems.POTION);
+
     }
 
 

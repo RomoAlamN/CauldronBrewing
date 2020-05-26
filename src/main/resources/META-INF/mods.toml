@@ -24,15 +24,15 @@ displayURL="http://romoalamn.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+# credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
 authors="PhilGreyTheThird" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A mod that adds various mexican foods.
+Adds a cauldron that you can use to brew in-world.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.amf]] #optional
+[[dependencies.cauldron]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -44,7 +44,7 @@ A mod that adds various mexican foods.
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.amf]]
+[[dependencies.cauldron]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.15.2]"
