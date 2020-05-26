@@ -1,4 +1,19 @@
 {
   "block.cauldron.cauldron": "Brewing Cauldron",
-  "itemGroup.amf": "Cauldron Brewing"
+  "itemGroup.cauldron": "Cauldron Brewing",
+  "cauldron.potion.of.effect.minecraft.speed": "Potion of Swiftness",
+  "cauldron.potion.of.effect.minecraft.jump_boost": "Potion of Jump Boost",
+  "cauldron.potion.of.effect.minecraft.instant_health": "Potion of Instant Heath",
+  "cauldron.potion.of.effect.minecraft.poison": "Potion of Poison",
+  "cauldron.potion.of.effect.minecraft.water_breathing": "Potion of Water Breathing",
+  "cauldron.potion.of.effect.minecraft.fire_resistance": "Potion of Fire Resistance",
+  "cauldron.potion.of.effect.minecraft.night_vision": "Potion of Night Vision",
+  "cauldron.potion.of.effect.minecraft.strength": "Potion of Strength",
+  "cauldron.potion.of.effect.minecraft.regeneration": "Potion of Regeneration",
+  "cauldron.potion.of.effect.turtle": "Potion of the Turtle Master",
+  "cauldron.potion.of.effect.minecraft.slow_falling": "Potion of Slow Falling",
+  "cauldron.potion.of.effect.minecraft.slowness": "Potion of Slowness",
+  "cauldron.potion.of.effect.minecraft.instant_damage": "Potion of Harming",
+  "cauldron.potion.of.effect.minecraft.weakness": "Potion of Weakness",
+  "cauldron.potion.of.effect.minecraft.invisibility": "Potion of Invisibility"
 }

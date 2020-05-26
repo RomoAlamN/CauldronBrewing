@@ -1,4 +1,4 @@
-package com.romoalamn.amf.blocks;
+package com.romoalamn.cauldron.blocks;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,15 +12,20 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
 public class CauldronContainer extends Container {
-    private TileEntity tileEntity;
-    private IItemHandler inv;
+    private final TileEntity tileEntity;
+    private final IItemHandler inv;
     public CauldronContainer(int id, World world, BlockPos pos, PlayerInventory playerInventory) {
-        super(AMFBlocks.cauldronContainerType, id);
+        super(CauldronBlocks.cauldronContainerType, id);
         tileEntity = world.getTileEntity(pos);
-        tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-            addSlot(new SlotItemHandler(h, 0, 80, 18));
-        });
+        if(tileEntity == null){
+            throw new NullPointerException("Cauldron has no Tile Entity");
+        }
+        tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                .ifPresent(h -> addSlot(new SlotItemHandler(h, 0, 80, 18)));
 
         inv = new InvWrapper(playerInventory);
 
@@ -29,9 +34,9 @@ public class CauldronContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
 
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, AMFBlocks.cauldronBlock);
+        return isWithinUsableDistance(IWorldPosCallable.of(Objects.requireNonNull(tileEntity.getWorld()), tileEntity.getPos()), playerIn, CauldronBlocks.cauldronBlock);
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx){
@@ -42,6 +47,7 @@ public class CauldronContainer extends Container {
         }
         return index;
     }
+    @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
     private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy){
         for(int j = 0; j < verAmount; j++){
             index = addSlotRange(handler, index, x, y, horAmount, dx);
@@ -49,6 +55,7 @@ public class CauldronContainer extends Container {
         }
         return index;
     }
+    @SuppressWarnings("SameParameterValue")
     private void layoutPlayerInventorySlots(int leftCol, int topRow){
         addSlotBox(inv, 9, leftCol, topRow, 9, 18, 3, 18);
         topRow += 58;

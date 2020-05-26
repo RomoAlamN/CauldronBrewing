@@ -1,6 +1,6 @@
-package com.romoalamn.amf.blocks.fluid;
+package com.romoalamn.cauldron.blocks.fluid;
 
-import com.romoalamn.amf.blocks.fluid.recipe.CauldronUtils;
+import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronUtils;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
@@ -8,14 +8,11 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -25,7 +22,6 @@ import java.util.function.Supplier;
  * Represents a Flowing and Still Liquid. Flowing is not really used
  */
 public class PotionFluid{
-    private static final Logger logger  = LogManager.getLogger();
     // unused
     /**
      * Unused, but must be defined
@@ -70,7 +66,6 @@ public class PotionFluid{
      * @return the new flowing instance.
      */
     public CauldronUtils.DelegatedOptional<FlowingFluid> createFlowing(PotionFluid.Properties props) {
-        logger.info("Creating the flowing water");
         flowingPotion = new Flowing(props);
         return CauldronUtils.DelegatedOptional.of(this::getFlowingLazy);
     }
@@ -81,18 +76,15 @@ public class PotionFluid{
      * @return the new still instance
      */
     public CauldronUtils.DelegatedOptional<FlowingFluid> createSource(PotionFluid.Properties props) {
-        logger.info("Creating source");
         sourcePotion = new Source(props);
         return CauldronUtils.DelegatedOptional.of(this::getSourceLazy);
     }
 
     public CauldronUtils.DelegatedOptional<FlowingFluid> getFlowingPotion(){
-        logger.info("Retrieving the flowing version");
         return CauldronUtils.DelegatedOptional.of(this::getFlowingLazy);
     }
 
     public CauldronUtils.DelegatedOptional<Fluid> getSourcePotion(){
-        logger.info("Retrieving Source potion");
         return CauldronUtils.DelegatedOptional.of(this::getSourceLazy);
     }
 
@@ -102,7 +94,6 @@ public class PotionFluid{
      */
     @Nonnull
     private FlowingFluid getSourceLazy() {
-        logger.info("Retrieve delegate called");
         return sourcePotion;
     }
 
@@ -112,7 +103,6 @@ public class PotionFluid{
      */
     @Nonnull
     private FlowingFluid getFlowingLazy() {
-        logger.info("Retrieve delegate called for flowing");
         return flowingPotion;
     }
 
@@ -229,7 +219,7 @@ public class PotionFluid{
 
     }
 
-    public static PotionFluid EMPTY = new PotionFluid(new PotionType(Potions.EMPTY, 0, PotionUtils.getPotionColor(Potions.EMPTY)));
+    public static PotionFluid EMPTY = new PotionFluid(new PotionType(Potions.EMPTY));
     static {
         EMPTY.setSource(Fluids.WATER);
         EMPTY.setFlowing(Fluids.FLOWING_WATER);

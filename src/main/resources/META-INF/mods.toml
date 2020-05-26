@@ -16,7 +16,7 @@ modId="cauldron" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
-displayName="Authentic Mexican Food" #mandatory
+displayName="Cauldron Brewing" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 # updateJSONURL="http://romoalamn.com/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -26,7 +26,7 @@ displayURL="http://romoalamn.com/" #optional
 # A text field displayed in the mod UI
 credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
-authors="Aware_Ganache" #optional
+authors="PhilGreyTheThird" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 A mod that adds various mexican foods.

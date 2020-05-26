@@ -1,10 +1,9 @@
-package com.romoalamn.amf.setup;
+package com.romoalamn.cauldron.setup;
 
-import com.romoalamn.amf.AMFMod;
-import com.romoalamn.amf.blocks.AMFBlocks;
+import com.romoalamn.cauldron.CauldronMod;
+import com.romoalamn.cauldron.blocks.CauldronBlocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -15,13 +14,13 @@ import org.apache.logging.log4j.Logger;
  * Creates an ItemGroup, and nothing else
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class AMFCommonSetup {
+public class CauldronCommonSetup {
     private static final Logger logger = LogManager.getLogger();
 
-    public static ItemGroup itemGroup = new ItemGroup(AMFMod.MODID) {
+    public static ItemGroup itemGroup = new ItemGroup(CauldronMod.MODID) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(AMFBlocks.cauldronBlock);
+            return new ItemStack(CauldronBlocks.cauldronBlock);
         }
     };
 

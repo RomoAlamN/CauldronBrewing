@@ -1,9 +1,8 @@
-package com.romoalamn.amf.blocks.fluid.recipe;
+package com.romoalamn.cauldron.blocks.fluid.recipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -143,6 +142,7 @@ public class CauldronBrewingRecipe implements IForgeRegistryEntry<CauldronBrewin
      */
     @Override
     public Class<CauldronBrewingRecipe> getRegistryType() {
+        //noinspection unchecked
         return (Class<CauldronBrewingRecipe>) getClass();
     }
 }
