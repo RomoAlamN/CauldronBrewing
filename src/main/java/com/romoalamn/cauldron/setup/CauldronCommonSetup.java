@@ -18,12 +18,13 @@ import org.apache.logging.log4j.Logger;
 public class CauldronCommonSetup {
     private static final Logger logger = LogManager.getLogger();
 
-    public static ItemGroup itemGroup = new ItemGroup(CauldronMod.MODID) {
+    public static final ItemGroup itemGroup = new ItemGroup(CauldronMod.MODID) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(CauldronBlocks.cauldronBlock);
         }
     };
+    public static boolean isApotheosisLoaded = false;
 
     @SubscribeEvent
     public static void initCommon(final FMLCommonSetupEvent event) {

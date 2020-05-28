@@ -9,12 +9,27 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-
+@ParametersAreNonnullByDefault
 public class CauldronItemPotion extends PotionItem {
     public CauldronItemPotion(Properties builder) {
         super(builder);
 
+    }
+
+    /**
+     * Returns true if this item has an enchantment glint. By default, this returns <code>stack.isItemEnchanted()</code>,
+     * but other items can override it (for instance, written books always return true).
+     * <p>
+     * Note that if you override this method, you generally want to also call the super version (on {@link net.minecraft.item.Item}) to get
+     * the glint for enchanted items. Of course, that is unnecessary if the overwritten version always returns true.
+     *
+     * @param stack the itemstack
+     */
+    @Override
+    public boolean hasEffect(ItemStack stack) {
+        return !PotionUtils.getEffectsFromStack(stack).isEmpty() | super.hasEffect(stack);
     }
 
     /**

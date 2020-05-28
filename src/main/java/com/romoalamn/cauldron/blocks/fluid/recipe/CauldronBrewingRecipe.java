@@ -4,12 +4,11 @@ import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class CauldronBrewingRecipe implements IForgeRegistryEntry<CauldronBrewingRecipe> {
+public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRecipe> {
     /**
      * This is the Fluidstack held in the cauldron. (Not actually.)
      * If this fluid is in the cauldron, we can check if the ingredient is proper
@@ -94,55 +93,5 @@ public class CauldronBrewingRecipe implements IForgeRegistryEntry<CauldronBrewin
      */
     public boolean isIngredient(ItemStack ingredient) {
         return this.ingredient.test(ingredient);
-    }
-
-    /**
-     * Sets a unique name for this Item. This should be used for uniquely identify the instance of the Item.
-     * This is the valid replacement for the atrocious 'getUnlocalizedName().substring(6)' stuff that everyone does.
-     * Unlocalized names have NOTHING to do with unique identifiers. As demonstrated by vanilla blocks and items.
-     * <p>
-     * The supplied name will be prefixed with the currently active mod's modId.
-     * If the supplied name already has a prefix that is different, it will be used and a warning will be logged.
-     * <p>
-     * If a name already exists, or this Item is already registered in a registry, then an IllegalStateException is thrown.
-     * <p>
-     * Returns 'this' to allow for chaining.
-     *
-     * @param name Unique registry name
-     * @return This instance
-     */
-    @Override
-    public CauldronBrewingRecipe setRegistryName(ResourceLocation name) {
-        if(name != null){
-            registryName = name;
-        }else{
-            throw new IllegalStateException("Recipe already has name");
-        }
-        return this;
-    }
-
-    /**
-     * A unique identifier for this entry, if this entry is registered already it will return it's official registry name.
-     * Otherwise it will return the name set in setRegistryName().
-     * If neither are valid null is returned.
-     *
-     * @return Unique identifier or null.
-     */
-    @Nullable
-    @Override
-    public ResourceLocation getRegistryName() {
-        return registryName;
-    }
-
-    /**
-     * Determines the type for this entry, used to look up the correct registry in the global registries list as there can only be one
-     * registry per concrete class.
-     *
-     * @return Root registry type.
-     */
-    @Override
-    public Class<CauldronBrewingRecipe> getRegistryType() {
-        //noinspection unchecked
-        return (Class<CauldronBrewingRecipe>) getClass();
     }
 }

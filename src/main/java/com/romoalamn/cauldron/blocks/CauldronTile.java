@@ -30,8 +30,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
-
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CauldronTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
     private static final Logger logger = LogManager.getLogger();
@@ -145,7 +147,8 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
     @Override
     public void handleUpdateTag(CompoundNBT tag) {
         super.handleUpdateTag(tag);
-        this.read((CompoundNBT) tag.get("caul"));
+        this.read((CompoundNBT) Objects.requireNonNull(tag.get("caul")));
+        Objects.requireNonNull(world).setBlockState(getPos(), getBlockState().cycle(CauldronBlock.UPDATE));
         logger.info("Received Update Packet from server! {!}");
     }
 
@@ -170,9 +173,10 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, new SUpdateTileEntityPacket(pkt.getPos(), 0,(CompoundNBT)pkt.getNbtCompound().get("base")));
+        super.onDataPacket(net, new SUpdateTileEntityPacket(pkt.getPos(), 0,(CompoundNBT) Objects.requireNonNull(pkt.getNbtCompound().get("base"))));
         CompoundNBT caul =  (CompoundNBT) pkt.getNbtCompound().get("cauldron");
-        this.read(caul);
+        this.read(Objects.requireNonNull(caul));
+        Objects.requireNonNull(world).setBlockState(getPos(), getBlockState().cycle(CauldronBlock.UPDATE));
         logger.info("Received Update Packet from server! {!}");
     }
 }

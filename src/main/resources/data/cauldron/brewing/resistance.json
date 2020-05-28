@@ -1,0 +1,13 @@
+{
+  "type": "cauldron:brewing",
+  "base": {
+    "potion_type": "cauldron:awkward"
+  },
+  "reagent": {
+    "item": "minecraft:shulker_shell"
+  },
+  "result": {
+    "potion_type": "cauldron:resistance"
+  }
+
+}

@@ -4,6 +4,7 @@ import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronUtils;
+import com.romoalamn.cauldron.blocks.fluid.recipe.PotionTypes;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -12,6 +13,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,33 +47,33 @@ public class RecipeCreator {
         PotionType leaping = register(registry, "leaping", Items.RABBIT_FOOT, CREATES_LONG | CREATES_STRONG, awkward);
         PotionType healing = register(registry, "healing", Items.GLISTERING_MELON_SLICE, CREATES_STRONG, awkward);
         PotionType poison = register(registry, "poison", Items.SPIDER_EYE, CREATES_LONG | CREATES_STRONG, awkward);
-        PotionType waterBreathing = register(registry, "water_breathing", Items.PUFFERFISH, CREATES_LONG, awkward);
-        PotionType fireResistance = register(registry, "fire_resistance", Items.MAGMA_CREAM, CREATES_LONG, awkward);
+        register(registry, "water_breathing", Items.PUFFERFISH, CREATES_LONG, awkward);
+        register(registry, "fire_resistance", Items.MAGMA_CREAM, CREATES_LONG, awkward);
         PotionType nightVision = register(registry, "night_vision", Items.GOLDEN_CARROT, CREATES_LONG, awkward);
         PotionType strength = register(registry, "strength", Items.BLAZE_POWDER, CREATES_LONG | CREATES_STRONG, awkward);
         PotionType regeneration = register(registry, "regeneration", Items.GHAST_TEAR, CREATES_LONG | CREATES_STRONG, awkward);
-        PotionType turtleMaster = register(registry, "turtle_master", Items.TURTLE_HELMET, CREATES_LONG | CREATES_STRONG, awkward);
-        PotionType slowFalling = register(registry, "slow_falling", Items.PHANTOM_MEMBRANE, CREATES_LONG, awkward);
+        registerTurtleMaster(registry);
+        register(registry, "slow_falling", Items.PHANTOM_MEMBRANE, CREATES_LONG, awkward);
 
         // these both create slowness
-        PotionType slowness = register(registry, "slowness", Items.FERMENTED_SPIDER_EYE, CREATES_LONG | CREATES_STRONG, swiftness);
+        register(registry, "slowness", Items.FERMENTED_SPIDER_EYE, CREATES_LONG | CREATES_STRONG, swiftness);
         register(registry, "slowness", Items.FERMENTED_SPIDER_EYE, 0, leaping);
 
         //register long and strong conversions
         registerConversion(registry, "swiftness", "slowness", CREATES_LONG | CREATES_STRONG);
         registerConversion(registry, "leaping", "slowness", CREATES_LONG | CREATES_STRONG);
 
-        PotionType harming = register(registry, "harming", Items.FERMENTED_SPIDER_EYE, CREATES_STRONG, healing);
+        register(registry, "harming", Items.FERMENTED_SPIDER_EYE, CREATES_STRONG, healing);
         register(registry, "harming", Items.FERMENTED_SPIDER_EYE, 0, poison);
 
         registerConversion(registry, "healing", "harming", CREATES_STRONG);
         registerConversion(registry, "poison", "harming", CREATES_STRONG);
 
-        PotionType invisibility = register(registry, "invisibility", Items.FERMENTED_SPIDER_EYE, CREATES_LONG, nightVision);
+        register(registry, "invisibility", Items.FERMENTED_SPIDER_EYE, CREATES_LONG, nightVision);
 
         registerConversion(registry, "night_vision", "invisibility", CREATES_LONG);
 
-        PotionType weakness = register(registry, "weakness", Items.FERMENTED_SPIDER_EYE, CREATES_LONG, regeneration);
+        register(registry, "weakness", Items.FERMENTED_SPIDER_EYE, CREATES_LONG, regeneration);
         register(registry, "weakness", Items.FERMENTED_SPIDER_EYE, 0, strength);
 
         registerConversion(registry, "strength", "weakness", CREATES_LONG);
@@ -84,8 +86,42 @@ public class RecipeCreator {
         return register(registry, name, CauldronUtils.getIngredient(reagent), mask, input);
     }
 
+    @SuppressWarnings("unused")
     public PotionType register(IForgeRegistry<CauldronBrewingRecipe> registry, String name, Tag<Item> reagent, int mask, PotionType input) {
         return register(registry, name, CauldronUtils.getIngredient(reagent), mask, input);
+    }
+
+    public PotionType registerTurtleMaster(IForgeRegistry<CauldronBrewingRecipe> registry) {
+        CauldronUtils.FluidComponent base = new CauldronUtils.FluidComponent(
+                PotionTypes.turtle_master, FluidAttributes.BUCKET_VOLUME
+        );
+        Ingredient reagent = CauldronUtils.getIngredient(Items.TURTLE_HELMET);
+        CauldronBrewingRecipe recipe = new CauldronBrewingRecipe(
+                new CauldronUtils.FluidComponent(
+                        PotionTypes.awkward, FluidAttributes.BUCKET_VOLUME
+                )
+                , reagent,
+                new CauldronUtils.FluidComponent(
+                        PotionTypes.turtle_master, FluidAttributes.BUCKET_VOLUME
+                )
+        );
+        PotionType longBase = CauldronFluids.getPotion(CauldronMod.MODID, "long_turtle_master");
+        registry.register(
+                CauldronUtils.defaultAmountRecipe(
+                        PotionTypes.turtle_master,
+                        Tags.Items.DUSTS_REDSTONE,
+                        PotionTypes.long_turtle_master
+                ).setRegistryName(new ResourceLocation(CauldronMod.MODID, "long_turtle_master_from_awkward"))
+        );
+        registry.register(
+                CauldronUtils.defaultAmountRecipe(
+                        PotionTypes.turtle_master,
+                        Tags.Items.DUSTS_GLOWSTONE,
+                        PotionTypes.long_turtle_master
+                ).setRegistryName(new ResourceLocation(CauldronMod.MODID, "strong_turtle_master_from_awkward"))
+        );
+
+        return PotionTypes.turtle_master;
     }
 
     public PotionType register(IForgeRegistry<CauldronBrewingRecipe> registry, String name, Ingredient reagent, int mask, PotionType input) {

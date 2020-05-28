@@ -9,6 +9,7 @@ import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
 import com.romoalamn.cauldron.item.CauldronItemPotion;
 import com.romoalamn.cauldron.setup.CauldronCommonSetup;
+import com.romoalamn.cauldron.setup.modcompat.DeferredActions;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.ContainerType;
@@ -86,9 +87,7 @@ public class CauldronMod {
                     .setType(CauldronBrewingRecipe.class)
                     .create();
             new RegistryBuilder<PotionType>().add(
-                    (IForgeRegistry.AddCallback<PotionType>) (owner, stage, id, obj, oldObj) -> {
-                        CauldronFluids.registerPot(obj);
-                    }
+                    (IForgeRegistry.AddCallback<PotionType>) (owner, stage, id, obj, oldObj) -> CauldronFluids.registerPot(obj)
             ).setName(new ResourceLocation("cauldron", "register_potion_types"))
                     .setType(PotionType.class)
                     .create();
@@ -167,6 +166,7 @@ public class CauldronMod {
 
         }
         private static void registerPotions(IForgeRegistry<PotionType> registry){
+            DeferredActions.INSTANCE.postEventTo("apotheosis", "register_potions", registry);
             registry.register(new PotionType(Potions.WATER)
             .setRegistryName(new ResourceLocation(CauldronMod.MODID, "potion_water")));
 

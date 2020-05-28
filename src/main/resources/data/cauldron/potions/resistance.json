@@ -1,0 +1,10 @@
+{
+  "name": "cauldron:resistance",
+  "effects": [
+    {
+      "amplifier": 1,
+      "duration": 3600,
+      "effect": "minecraft:resistance"
+    }
+  ]
+}
