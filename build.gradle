@@ -15,7 +15,7 @@ apply plugin: 'maven-publish'
 
 version = '1.0'
 group = 'com.romalamn.cauldron' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'cauldron'
+archivesBaseName = 'Cauldron-'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -59,7 +59,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                cauldron {
                     source sourceSets.main
                 }
             }
@@ -74,7 +74,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'cauldron', '--all', '--output', file('src/generated/resources/')
 
             mods {
                 examplemod {
