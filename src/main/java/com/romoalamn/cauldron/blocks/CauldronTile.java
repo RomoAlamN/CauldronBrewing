@@ -146,7 +146,10 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void handleUpdateTag(CompoundNBT tag) {
-        super.handleUpdateTag(tag);
+        if(!world.chunkExists(getPos().getX() >> 4, getPos().getZ() >> 4)){
+            return;
+        }
+        super.handleUpdateTag((CompoundNBT) tag.get("basic"));
         this.read((CompoundNBT) Objects.requireNonNull(tag.get("caul")));
         Objects.requireNonNull(world).setBlockState(getPos(), getBlockState().cycle(CauldronBlock.UPDATE));
         logger.info("Received Update Packet from server! {!}");
@@ -173,6 +176,9 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        if(!world.chunkExists(getPos().getX() >>4, getPos().getZ() >> 4)){
+            return;
+        }
         CompoundNBT caul =  (CompoundNBT) pkt.getNbtCompound().get("cauldron");
         this.read(Objects.requireNonNull(caul));
         Objects.requireNonNull(world).setBlockState(getPos(), getBlockState().cycle(CauldronBlock.UPDATE));

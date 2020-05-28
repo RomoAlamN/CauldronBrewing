@@ -9,6 +9,7 @@ import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
 import com.romoalamn.cauldron.item.CauldronItemPotion;
 import com.romoalamn.cauldron.setup.CauldronCommonSetup;
+import com.romoalamn.cauldron.setup.Config;
 import com.romoalamn.cauldron.setup.modcompat.DeferredActions;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -56,6 +59,8 @@ public class CauldronMod {
     public CauldronMod() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
     }
 
 

@@ -7,6 +7,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,10 +26,21 @@ public class CauldronCommonSetup {
         }
     };
     public static boolean isApotheosisLoaded = false;
-
     @SubscribeEvent
     public static void initCommon(final FMLCommonSetupEvent event) {
         CauldronCapabilities.register();
+
     }
+
+    @SubscribeEvent
+    public static void onLoad(final ModConfig.Loading event){
+
+    }
+
+    @SubscribeEvent
+    public static void onReload(final ModConfig.Reloading event){
+
+    }
+
 
 }

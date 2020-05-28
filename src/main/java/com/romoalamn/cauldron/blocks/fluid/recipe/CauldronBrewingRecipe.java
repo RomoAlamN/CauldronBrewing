@@ -3,7 +3,6 @@ package com.romoalamn.cauldron.blocks.fluid.recipe;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -22,10 +21,8 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * this is the Fluid that is in the Cauldron after a successful recipe
      */
     CauldronUtils.FluidComponent output;
-    /**
-     * This is the registry name of the recipe. Used in the to register the recipe in the registry
-     */
-    ResourceLocation registryName = null;
+
+    RecipeStates state;
 
     /**
      * Default constructor
@@ -34,9 +31,13 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * @param output the liquid in the cauldron after a successful brewing
      */
     public CauldronBrewingRecipe(CauldronUtils.FluidComponent input, Ingredient ingredient, CauldronUtils.FluidComponent output) {
+        this(input, ingredient, output, RecipeStates.HEATING);
+    }
+    public CauldronBrewingRecipe(CauldronUtils.FluidComponent input, Ingredient ingredient, CauldronUtils.FluidComponent output, RecipeStates state){
         this.input = input;
         this.ingredient = ingredient;
         this.output  = output;
+        this.state = state;
     }
 
     /**
@@ -84,6 +85,10 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      */
     public CauldronUtils.FluidComponent getOutput() {
         return output;
+    }
+
+    public RecipeStates getState() {
+        return state;
     }
 
     /**
