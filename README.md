@@ -3,7 +3,7 @@ Allows you to brew potions in a modded cauldron. To create the cauldron, simply 
 vanilla cauldron in a crafting bench, with blaze powder underneath it. All recipes are
 the same as in Vanilla. 
 
-###Planned Features
+### Planned Features
 
 - Integration with JEI is on the roadmap.
 - Apotheosis integration was planned, but on hold until further notice.
@@ -56,5 +56,4 @@ brewing.json
   }
 }
 ```
-Amount corresponds to millibuckets always. The reagent can be any item registerd, or any tag registered
-base and result default to "cauldron:awkward" and EMPTY, respectively. Only the reagent is required.
+Amount corresponds to millibuckets always. The reagent can be any item registerd, or any tag registered. Base and result default to "cauldron:awkward" and EMPTY respectively. Only the reagent is required, everythign else has defaults. 
