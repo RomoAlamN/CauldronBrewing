@@ -173,7 +173,6 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, new SUpdateTileEntityPacket(pkt.getPos(), 0,(CompoundNBT) Objects.requireNonNull(pkt.getNbtCompound().get("base"))));
         CompoundNBT caul =  (CompoundNBT) pkt.getNbtCompound().get("cauldron");
         this.read(Objects.requireNonNull(caul));
         Objects.requireNonNull(world).setBlockState(getPos(), getBlockState().cycle(CauldronBlock.UPDATE));

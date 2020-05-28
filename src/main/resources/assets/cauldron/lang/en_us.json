@@ -18,5 +18,21 @@
   "cauldron.potion.of.effect.minecraft.slowness": "Potion of Slowness",
   "cauldron.potion.of.effect.minecraft.instant_damage": "Potion of Harming",
   "cauldron.potion.of.effect.minecraft.weakness": "Potion of Weakness",
-  "cauldron.potion.of.effect.minecraft.invisibility": "Potion of Invisibility"
+  "cauldron.potion.of.effect.minecraft.invisibility": "Potion of Invisibility",
+  "cauldron.potion.of.effect.minecraft.resistance": "Potion of Resistance",
+  "cauldron.potion.of.effect.minecraft.haste": "Potion of Haste",
+  "cauldron.potion.of.effect.minecraft.nausea": "Potion of Nausea",
+  "cauldron.potion.of.effect.minecraft.hunger": "Potion of Hunger",
+  "cauldron.potion.of.effect.minecraft.wither": "Potion of Withering",
+  "cauldron.potion.of.effect.minecraft.health_boost": "Potion of Health",
+  "cauldron.potion.of.effect.minecraft.absorption": "Potion of Absorption",
+  "cauldron.potion.of.effect.minecraft.saturation": "Potion of Saturation",
+  "cauldron.potion.of.effect.minecraft.glowing": "Potion of Glowing",
+  "cauldron.potion.of.effect.minecraft.levitation": "Potion of Levitation",
+  "cauldron.potion.of.effect.minecraft.luck": "Potion of Fortune",
+  "cauldron.potion.of.effect.minecraft.unluck": "Potion of Misfortune",
+  "cauldron.potion.of.effect.minecraft.conduit_power": "Potion of Conduit Power",
+  "cauldron.potion.of.effect.minecraft.dolphins_grace": "Potion of Dolphin Friendship",
+  "cauldron.potion.of.effect.minecraft.bad_omen": "Potion of Trapped Souls",
+  "cauldron.potion.of.effect.minecraft.hero_of_the_village": "Potion of Heroism"
 }

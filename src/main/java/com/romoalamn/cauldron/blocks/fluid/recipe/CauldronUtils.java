@@ -51,13 +51,13 @@ public class CauldronUtils {
 
     public static EffectInstance getEffectFromJson(JsonElement effect) throws IllegalArgumentException{
         JsonObject obj = effect.getAsJsonObject();
-        int amplifier = 1;
+        int amplifier = 0;
         int duration = 3600;
         Effect eff;
         if (obj.has("amplifier")) {
             amplifier = obj.get("amplifier").getAsInt();
         } else {
-            logger.warn("No amplifier present, defaultin to 1");
+            logger.warn("No amplifier present, defaulting to level 1 (0)");
         }
         if (obj.has("duration")) {
             duration = obj.get("duration").getAsInt();
