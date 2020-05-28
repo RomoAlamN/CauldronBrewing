@@ -12,10 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Stores all fluids, and the recipes for the cauldron (A little crowded, I know)
@@ -108,5 +105,22 @@ public class CauldronFluids {
             }
         }
         return Optional.empty();
+    }
+    public static String getBase(PotionType type){
+        String[] potion_name = type.getEffects().toString().split("\\.");
+        return potion_name[potion_name.length - 1];
+    }
+    public static Collection<PotionType> getPotionsSorted() {
+        Collection<PotionType> potions = getPotions();
+        List<PotionType> pots = new ArrayList<>();
+        pots.addAll(potions);
+        pots.sort((pot1, pot2)->{
+            // convert to strings
+            String base1 = getBase(pot1);
+            String base2 = getBase(pot2);
+
+            return base1.compareTo(base2);
+        });
+        return pots;
     }
 }

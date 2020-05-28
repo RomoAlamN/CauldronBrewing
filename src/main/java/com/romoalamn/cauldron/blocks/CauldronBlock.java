@@ -2,6 +2,7 @@ package com.romoalamn.cauldron.blocks;
 
 import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
 import com.romoalamn.cauldron.blocks.fluid.recipe.*;
+import com.romoalamn.cauldron.enchantments.CauldronEnchantments;
 import com.romoalamn.cauldron.setup.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,7 +13,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
@@ -62,10 +65,10 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
     public static final BooleanProperty UPDATE = BooleanProperty.create("update");
     public static final EnumProperty<RecipeStates> RECIPE_STATE = EnumProperty.create("recipe_state", RecipeStates.class);
 
-    public static final Block[] heatingBlocks = new Block[] {
+    public static final Block[] heatingBlocks = new Block[]{
             Blocks.FIRE, Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA
     };
-    public static final Block[] coolingBlocks = new Block[] {
+    public static final Block[] coolingBlocks = new Block[]{
             Blocks.BLUE_ICE, Blocks.FROSTED_ICE, Blocks.PACKED_ICE, Blocks.SNOW_BLOCK, Blocks.SOUL_SAND
     };
 
@@ -105,36 +108,30 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
         if (hOpt.isPresent()) {
             // the or else will never exist
             IPotionHandler h = hOpt.orElse(new PotionHandler(FluidAttributes.BUCKET_VOLUME));
-            //region recipes
-//            LOGGER.info("What liquid is in the cauldron? {}", h.getPotion().potion);
-            // check if
-//            LOGGER.info("Are we holding a potion ingredient for the fluid?{}", CauldronFluids.isPotionIngredient(heldItem, h.getPotion().potion));
             if (CauldronFluids.isPotionIngredient(heldItem, h.getPotion().potion)) {
                 Optional<CauldronBrewingRecipe> recipeOpt = CauldronFluids.getRecipe(h.getPotion(), heldItem);
                 if (!recipeOpt.isPresent()) {
-//                        LOGGER.info("Somehow, I got my wires crossed (The above check turned out to be false)");
                     return ActionResultType.FAIL;
                 }
 
                 CauldronBrewingRecipe recipe = recipeOpt.get();
 
                 int outputAmount = h.getPotion().amount / (recipe.getInput().amount);
-//                LOGGER.info("Turns out we can make about {} iterations of the recipe", outputAmount);
                 if (outputAmount > heldItem.getCount()) {
                     LOGGER.info("But we don't have enough items in our hand. (We have {})", heldItem.getCount());
                     return ActionResultType.FAIL;
                 } else {
-                    if(Config.COMMON_CONFIG.followStateRecipe.get()){
+                    if (Config.COMMON_CONFIG.followStateRecipe.get()) {
                         // check if we have a valid block.
                         RecipeStates recipeState = recipe.getState();
-                        switch (recipeState){
+                        switch (recipeState) {
                             case HEATING:
-                                if(!checkForHeatingBlock(worldIn, pos.add(0,-1,0))){
+                                if (!checkForHeatingBlock(worldIn, pos.add(0, -1, 0))) {
                                     return ActionResultType.FAIL;
                                 }
                                 break;
                             case COOLING:
-                                if(!checkForCoolingBlock(worldIn, pos.add(0,-1,0))){
+                                if (!checkForCoolingBlock(worldIn, pos.add(0, -1, 0))) {
                                     return ActionResultType.FAIL;
                                 }
                                 break;
@@ -142,12 +139,14 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                         }
                     }
                     if (!worldIn.isRemote) {
+                        //this stuff needs to be done on the server
                         heldItem.shrink(outputAmount);
                         h.replaceFluid(recipe.getOutput().potion);
 
                         ent.markDirty();
                         createWorldUpdate(state, worldIn, pos, h);
-                    }else {
+                    } else {
+                        // this can only be done on the client
                         double px = pos.getX() + 0.5;
                         double py = pos.getY() + 1.2;
                         double pz = pos.getZ() + 0.5;
@@ -224,16 +223,42 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
             }
             //endregion
 
+            // if we have extra content enabled, we can enchant items with the cauldron.
+            if (Config.COMMON_CONFIG.extraContent.get() && h.getPotion().amount >= 1000) {
+                int maxUses = Config.COMMON_CONFIG.maxUses.get();
+                if(!worldIn.isRemote) {
+                    if (h.getPotion().potion.getEffects().size() > 0) {
+                        heldItem.addEnchantment(CauldronEnchantments.POTION_ENCHANTMENT, 1);
+                        CompoundNBT nbt = heldItem.getTag();
+                        CompoundNBT effectTag = new CompoundNBT();
+                        effectTag.putString("id", h.getPotion().potion.getRegistryName().toString());
+                        int level = 0;
+                        for (EffectInstance eff : h.getPotion().potion.getEffects()) {
+                            level += 1 + eff.getAmplifier();
+                        }
+                        if (level < 1) level = 1;
+                        effectTag.putInt("uses", maxUses / level);
+                        effectTag.putInt("max_uses", maxUses / level);
+                        nbt.put("potion_effect", effectTag);
+
+                        h.drain(1000, IPotionHandler.PotionAction.EXECUTE);
+                    }
+                    createWorldUpdate(state, worldIn, pos, h);
+                }
+                return ActionResultType.SUCCESS;
+            }
         }
 
         return ActionResultType.PASS;
     }
-    private <T> boolean contains(T[] toCheck, T search){
+
+    private <T> boolean contains(T[] toCheck, T search) {
         for (T t : toCheck) {
             if (t.equals(search)) return true;
         }
         return false;
     }
+
     private boolean checkForCoolingBlock(World worldIn, BlockPos pos) {
         BlockState state = worldIn.getBlockState(pos);
         boolean cont = contains(coolingBlocks, state.getBlock());

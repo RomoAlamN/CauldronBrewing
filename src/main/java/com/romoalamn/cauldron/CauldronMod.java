@@ -7,12 +7,15 @@ import com.romoalamn.cauldron.blocks.CauldronTile;
 import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
+import com.romoalamn.cauldron.enchantments.PotionEnchantment;
 import com.romoalamn.cauldron.item.CauldronItemPotion;
 import com.romoalamn.cauldron.setup.CauldronCommonSetup;
 import com.romoalamn.cauldron.setup.Config;
 import com.romoalamn.cauldron.setup.modcompat.DeferredActions;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -165,15 +168,25 @@ public class CauldronMod {
         }
 
         @SubscribeEvent
-        public static void onPotionRegister(final RegistryEvent.Register<PotionType> potionTypeRegister){
+        public static void onEnchantmentRegistry(final RegistryEvent.Register<Enchantment> enchantmentRegister) {
+            enchantmentRegister.getRegistry().register(
+                    new PotionEnchantment(EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND)
+                            .setRegistryName(CauldronMod.MODID, "enchant_potion_effect")
+            );
+
+        }
+
+        @SubscribeEvent
+        public static void onPotionRegister(final RegistryEvent.Register<PotionType> potionTypeRegister) {
             IForgeRegistry<PotionType> registry = potionTypeRegister.getRegistry();
             registerPotions(registry);
 
         }
-        private static void registerPotions(IForgeRegistry<PotionType> registry){
+
+        private static void registerPotions(IForgeRegistry<PotionType> registry) {
             DeferredActions.INSTANCE.postEventTo("apotheosis", "register_potions", registry);
             registry.register(new PotionType(Potions.WATER)
-            .setRegistryName(new ResourceLocation(CauldronMod.MODID, "potion_water")));
+                    .setRegistryName(new ResourceLocation(CauldronMod.MODID, "potion_water")));
 
             registry.register(new PotionType(Potions.SWIFTNESS)
                     .setRegistryName(CauldronMod.MODID, "swiftness"));
