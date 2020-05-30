@@ -15,6 +15,7 @@ import com.romoalamn.cauldron.setup.Config;
 import com.romoalamn.cauldron.setup.modcompat.DeferredActions;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -28,8 +29,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -293,11 +294,12 @@ public class CauldronMod {
         public static void tooltipEvent(ItemTooltipEvent tooltipEvent) {
             ItemStack stack = tooltipEvent.getItemStack();
             List<ITextComponent> tooltip = tooltipEvent.getToolTip();
-            if(EnchantmentHelper.getEnchantments(stack).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)){
-                try{
+            if (EnchantmentHelper.getEnchantments(stack).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)) {
+                try {
                     PotionType type = CauldronUtils.getPotionFromStack(stack);
-                    tooltip.add(new TranslationTextComponent("%s"+type.getRegistryName(), TextFormatting.LIGHT_PURPLE));
-                }catch (Exception e){
+                    String i18nStr = I18n.format("cauldron.desc." +  type.getRegistryName().getPath());
+                    tooltip.add(new StringTextComponent(TextFormatting.LIGHT_PURPLE + i18nStr));
+                } catch (Exception e) {
                     LOGGER.warn("Failed to get item tooltip:", e);
                 }
             }
