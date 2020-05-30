@@ -1,13 +1,23 @@
 package com.romoalamn.cauldron.blocks.fluid;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.romoalamn.cauldron.CauldronMod;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
-import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronUtils;
 import com.romoalamn.cauldron.item.CauldronItems;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +27,7 @@ import java.util.*;
 /**
  * Stores all fluids, and the recipes for the cauldron (A little crowded, I know)
  */
-public class CauldronFluids {
+public class CauldronUtils {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /**
@@ -78,7 +88,7 @@ public class CauldronFluids {
      * @param p0 the FluidStack
      * @return the Potion Item
      */
-    public static ItemStack liquidToPotion(CauldronUtils.FluidComponent p0) {
+    public static ItemStack liquidToPotion(FluidComponent p0) {
         ItemStack potItem = new ItemStack(CauldronItems.POTION, 1);
         PotionType fluid = p0.potion;
         List<EffectInstance> pot = fluid.getEffects();
@@ -98,7 +108,7 @@ public class CauldronFluids {
      * @param ingredient the ingredient that acts as a catalyst
      * @return An optional recipe, empty if no recipe exists.
      */
-    public static Optional<CauldronBrewingRecipe> getRecipe(CauldronUtils.FluidComponent stack, ItemStack ingredient) {
+    public static Optional<CauldronBrewingRecipe> getRecipe(FluidComponent stack, ItemStack ingredient) {
         for (CauldronBrewingRecipe recipe : recipes.values()) {
             if (recipe.isInput(stack.potion) && recipe.isIngredient(ingredient)) {
                 return Optional.of(recipe);
@@ -123,4 +133,90 @@ public class CauldronFluids {
         });
         return pots;
     }
+    public static Logger logger = LogManager.getLogger(CauldronMod.MODID + "_Utilities");
+
+    public static CauldronBrewingRecipe defaultAmountRecipe(PotionType in, Item reagent, PotionType out) {
+        return new CauldronBrewingRecipe(getFluid(in), getIngredient(reagent), getFluid(out));
+    }
+
+    public static CauldronBrewingRecipe defaultAmountRecipe(PotionType in, Tag<Item> reagent, PotionType out) {
+        return new CauldronBrewingRecipe(getFluid(in), getIngredient(reagent), getFluid(out));
+    }
+
+    public static CauldronBrewingRecipe defaultAmountRecipe(PotionType in, Ingredient reagent, PotionType out) {
+        return new CauldronBrewingRecipe(getFluid(in), reagent, getFluid(out));
+    }
+
+    public static DelegatedOptional<Fluid> getFluidDelegate(DelegatedOptional.Delegate<Fluid> supp) {
+        return DelegatedOptional.of(supp);
+    }
+
+    public static FluidComponent getFluid(PotionType in) {
+        return new FluidComponent(in, FluidAttributes.BUCKET_VOLUME / 2);
+    }
+
+    public static Ingredient getIngredient(Item reagent) {
+        return Ingredient.fromStacks(new ItemStack(reagent));
+    }
+
+    public static Ingredient getIngredient(Tag<Item> tag) {
+        return Ingredient.fromTag(tag);
+    }
+
+    public static EffectInstance getEffectFromJson(JsonElement effect) throws IllegalArgumentException{
+        JsonObject obj = effect.getAsJsonObject();
+        int amplifier = 0;
+        int duration = 3600;
+        Effect eff;
+        if (obj.has("amplifier")) {
+            amplifier = obj.get("amplifier").getAsInt();
+        } else {
+            logger.warn("No amplifier present, defaulting to level 1 (0)");
+        }
+        if (obj.has("duration")) {
+            duration = obj.get("duration").getAsInt();
+        } else {
+            logger.warn("No duration present, using 3600");
+        }
+        if (obj.has("effect")) {
+            eff = getEffectFromString(obj.get("effect").getAsString());
+        } else {
+            throw new IllegalArgumentException("Potion has no effect registered");
+        }
+
+        return new EffectInstance(eff, duration, amplifier);
+    }
+
+    public static Effect getEffectFromString(String eff) throws IllegalArgumentException{
+        IForgeRegistry<Effect> registry = RegistryManager.ACTIVE.getRegistry(Effect.class);
+        ResourceLocation loc = new ResourceLocation(eff);
+        if(registry.containsKey(loc)){
+            return registry.getValue(loc);
+        }else{
+            throw new IllegalArgumentException("Effect does not exist: " + eff);
+        }
+
+    }
+
+    public static class DelegatedOptional<T> {
+        Delegate<T> item;
+
+        private DelegatedOptional(Delegate<T> d) {
+            item = d;
+        }
+
+        public static <T> DelegatedOptional<T> of(Delegate<T> d) {
+            return new DelegatedOptional<>(d);
+        }
+
+        public T get() {
+            return item.get();
+        }
+
+        @FunctionalInterface
+        public interface Delegate<T> {
+            T get();
+        }
+    }
+
 }

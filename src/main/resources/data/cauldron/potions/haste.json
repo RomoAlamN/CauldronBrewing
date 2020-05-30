@@ -1,33 +1,35 @@
 {
+  "type": "cauldron:potion_list",
+
   "requires": "apotheosis",
   "potions": [
     {
-      "name": "cauldron:resistance",
+      "name": "cauldron:haste",
       "effects": [
         {
           "amplifier": 0,
           "duration": 3600,
-          "effect": "minecraft:resistance"
+          "effect": "minecraft:haste"
         }
       ]
     },
     {
-      "name": "cauldron:long_resistance",
+      "name": "cauldron:long_haste",
       "effects": [
         {
           "amplifier": 0,
           "duration": 10000,
-          "effect": "minecraft:resistance"
+          "effect": "minecraft:haste"
         }
       ]
     },
     {
-      "name": "cauldron:strong_resistance",
+      "name": "cauldron:strong_haste",
       "effects": [
         {
           "amplifier": 1,
-          "duration": 600,
-          "effect": "minecraft:resistance"
+          "duration": 1800,
+          "effect": "minecraft:haste"
         }
       ]
     }

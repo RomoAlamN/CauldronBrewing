@@ -6,17 +6,17 @@
       "potion_type": "cauldron:awkward"
     },
     "reagent": {
-      "item": "minecraft:shulker_shell"
+      "item": "minecraft:wither_skeleton_skull"
     },
     "output": {
       "base": {
-        "potion_type": "cauldron:resistance"
+        "potion_type": "cauldron:wither"
       },
       "long": {
-        "potion_type": "cauldron:long_resistance"
+        "potion_type": "cauldron:long_wither"
       },
       "strong": {
-        "potion_type": "cauldron:strong_resistance"
+        "potion_type": "cauldron:strong_wither"
       }
     }
   }

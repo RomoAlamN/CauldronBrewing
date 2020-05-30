@@ -6,17 +6,18 @@
       "potion_type": "cauldron:awkward"
     },
     "reagent": {
-      "item": "minecraft:shulker_shell"
+      "item": "minecraft:brown_mushroom"
     },
     "output": {
       "base": {
-        "potion_type": "cauldron:resistance"
+        "potion_type": "cauldron:haste",
+        "amount": 250
       },
       "long": {
-        "potion_type": "cauldron:long_resistance"
+        "potion_type": "cauldron:long_haste"
       },
       "strong": {
-        "potion_type": "cauldron:strong_resistance"
+        "potion_type": "cauldron:strong_haste"
       }
     }
   }

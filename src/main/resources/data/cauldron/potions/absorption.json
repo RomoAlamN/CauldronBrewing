@@ -1,0 +1,36 @@
+{
+  "type": "cauldron:potion_list",
+  "requires": "apotheosis",
+  "potions": [
+    {
+      "name": "cauldron:absorption",
+      "effects": [
+        {
+          "amplifier": 1,
+          "duration": 1200,
+          "effect": "minecraft:absorption"
+        }
+      ]
+    },
+    {
+      "name": "cauldron:long_absorption",
+      "effects": [
+        {
+          "amplifier": 1,
+          "duration": 3600,
+          "effect": "minecraft:absorption"
+        }
+      ]
+    },
+    {
+      "name": "cauldron:strong_absorption",
+      "effects": [
+        {
+          "amplifier": 3,
+          "duration": 600,
+          "effect": "minecraft:absorption"
+        }
+      ]
+    }
+  ]
+}

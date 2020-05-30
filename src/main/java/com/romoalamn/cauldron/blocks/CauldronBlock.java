@@ -1,6 +1,7 @@
 package com.romoalamn.cauldron.blocks;
 
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
+import com.romoalamn.cauldron.blocks.fluid.FluidComponent;
 import com.romoalamn.cauldron.blocks.fluid.recipe.*;
 import com.romoalamn.cauldron.enchantments.CauldronEnchantments;
 import com.romoalamn.cauldron.setup.Config;
@@ -108,8 +109,8 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
         if (hOpt.isPresent()) {
             // the or else will never exist
             IPotionHandler h = hOpt.orElse(new PotionHandler(FluidAttributes.BUCKET_VOLUME));
-            if (CauldronFluids.isPotionIngredient(heldItem, h.getPotion().potion)) {
-                Optional<CauldronBrewingRecipe> recipeOpt = CauldronFluids.getRecipe(h.getPotion(), heldItem);
+            if (CauldronUtils.isPotionIngredient(heldItem, h.getPotion().potion)) {
+                Optional<CauldronBrewingRecipe> recipeOpt = CauldronUtils.getRecipe(h.getPotion(), heldItem);
                 if (!recipeOpt.isPresent()) {
                     return ActionResultType.FAIL;
                 }
@@ -185,7 +186,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
             if (heldItem.getItem() == Items.GLASS_BOTTLE) {
                 if (h.getPotion().amount >= FluidAttributes.BUCKET_VOLUME / 4 && !worldIn.isRemote) {
                     heldItem.setCount(heldItem.getCount() - 1);
-                    ItemStack pot = CauldronFluids.liquidToPotion(h.drain(250, IPotionHandler.PotionAction.EXECUTE));
+                    ItemStack pot = CauldronUtils.liquidToPotion(h.drain(250, IPotionHandler.PotionAction.EXECUTE));
 
                     if (!player.addItemStackToInventory(pot)) {
                         player.dropItem(pot, false);
@@ -196,7 +197,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                 return ActionResultType.SUCCESS;
             } else if (heldItem.getItem() == Items.WATER_BUCKET) {
                 if (h.getPotion().isEmpty() && !worldIn.isRemote) {
-                    h.fill(new CauldronUtils.FluidComponent(CauldronPotionTypes.WATER, 1000), IPotionHandler.PotionAction.EXECUTE);
+                    h.fill(new FluidComponent(CauldronPotionTypes.WATER, 1000), IPotionHandler.PotionAction.EXECUTE);
                     if (!player.isCreative()) {
                         heldItem.shrink(1);
                         player.dropItem(new ItemStack(Items.BUCKET), false);

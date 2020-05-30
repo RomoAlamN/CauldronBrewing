@@ -17,12 +17,12 @@ public class PotionBlock extends FlowingFluidBlock {
     Property<PotionType> fluidProperty = new Property<PotionType>("fluid_contained", PotionType.class) {
         @Override
         public Collection<PotionType> getAllowedValues() {
-            return CauldronFluids.getPotions();
+            return CauldronUtils.getPotions();
         }
 
         @Override
         public Optional<PotionType> parseValue(@Nonnull String value) {
-            return Optional.of(CauldronFluids.getPotion(value));
+            return Optional.of(CauldronUtils.getPotion(value));
         }
 
         @Override

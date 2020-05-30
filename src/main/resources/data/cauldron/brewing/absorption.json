@@ -6,17 +6,17 @@
       "potion_type": "cauldron:awkward"
     },
     "reagent": {
-      "item": "minecraft:shulker_shell"
+      "item": "minecraft:golden_apple"
     },
     "output": {
       "base": {
-        "potion_type": "cauldron:resistance"
+        "potion_type": "cauldron:absorption"
       },
       "long": {
-        "potion_type": "cauldron:long_resistance"
+        "potion_type": "cauldron:long_absorption"
       },
       "strong": {
-        "potion_type": "cauldron:strong_resistance"
+        "potion_type": "cauldron:strong_absorption"
       }
     }
   }

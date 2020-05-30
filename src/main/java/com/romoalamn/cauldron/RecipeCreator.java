@@ -1,9 +1,9 @@
 package com.romoalamn.cauldron;
 
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
+import com.romoalamn.cauldron.blocks.fluid.FluidComponent;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
-import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.recipe.PotionTypes;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -29,7 +29,7 @@ public class RecipeCreator {
 
     public void registerPotions(IForgeRegistry<CauldronBrewingRecipe> registry) {
 
-        PotionType awkward = CauldronFluids.getPotion(CauldronMod.MODID + ":awkward");
+        PotionType awkward = CauldronUtils.getPotion(CauldronMod.MODID + ":awkward");
         CauldronUtils.DelegatedOptional<Fluid> water = CauldronUtils.DelegatedOptional.of(() -> Fluids.WATER);
 
         //awkward potion
@@ -92,20 +92,21 @@ public class RecipeCreator {
     }
 
     public PotionType registerTurtleMaster(IForgeRegistry<CauldronBrewingRecipe> registry) {
-        CauldronUtils.FluidComponent base = new CauldronUtils.FluidComponent(
+        FluidComponent base = new FluidComponent(
                 PotionTypes.turtle_master, FluidAttributes.BUCKET_VOLUME
         );
         Ingredient reagent = CauldronUtils.getIngredient(Items.TURTLE_HELMET);
         CauldronBrewingRecipe recipe = new CauldronBrewingRecipe(
-                new CauldronUtils.FluidComponent(
+                new FluidComponent(
                         PotionTypes.awkward, FluidAttributes.BUCKET_VOLUME
                 )
                 , reagent,
-                new CauldronUtils.FluidComponent(
+                new FluidComponent(
                         PotionTypes.turtle_master, FluidAttributes.BUCKET_VOLUME
                 )
         );
-        PotionType longBase = CauldronFluids.getPotion(CauldronMod.MODID, "long_turtle_master");
+
+        PotionType longBase = CauldronUtils.getPotion(CauldronMod.MODID, "long_turtle_master");
         registry.register(
                 CauldronUtils.defaultAmountRecipe(
                         PotionTypes.turtle_master,
@@ -125,7 +126,7 @@ public class RecipeCreator {
     }
 
     public PotionType register(IForgeRegistry<CauldronBrewingRecipe> registry, String name, Ingredient reagent, int mask, PotionType input) {
-        PotionType base = CauldronFluids.getPotion(CauldronMod.MODID, name);
+        PotionType base = CauldronUtils.getPotion(CauldronMod.MODID, name);
 //        logger.info(input.getRegistryName());
         String inputName = Objects.requireNonNull(input.getRegistryName()).getPath();
 
@@ -137,7 +138,7 @@ public class RecipeCreator {
                 ).setRegistryName(new ResourceLocation(CauldronMod.MODID, name + "_from_" + inputName))
         );
         if ((mask & CREATES_LONG) > 0) {
-            PotionType longBase = CauldronFluids.getPotion(CauldronMod.MODID, "long_" + name);
+            PotionType longBase = CauldronUtils.getPotion(CauldronMod.MODID, "long_" + name);
             registry.register(
                     CauldronUtils.defaultAmountRecipe(
                             base,
@@ -147,7 +148,7 @@ public class RecipeCreator {
             );
         }
         if ((mask & CREATES_STRONG) > 0) {
-            PotionType strongBase = CauldronFluids.getPotion(CauldronMod.MODID, "strong_" + name);
+            PotionType strongBase = CauldronUtils.getPotion(CauldronMod.MODID, "strong_" + name);
             registry.register(
                     CauldronUtils.defaultAmountRecipe(
                             base,
@@ -161,8 +162,8 @@ public class RecipeCreator {
 
     public void registerConversion(IForgeRegistry<CauldronBrewingRecipe> registry, String first, String last, int mask) {
         if ((mask & CREATES_LONG) > 0) {
-            PotionType longFirst = CauldronFluids.getPotion(CauldronMod.MODID, "long_" + first);
-            PotionType longSecond = CauldronFluids.getPotion(CauldronMod.MODID, "long_" + last);
+            PotionType longFirst = CauldronUtils.getPotion(CauldronMod.MODID, "long_" + first);
+            PotionType longSecond = CauldronUtils.getPotion(CauldronMod.MODID, "long_" + last);
             registry.register(
                     CauldronUtils.defaultAmountRecipe(
                             longFirst,
@@ -172,8 +173,8 @@ public class RecipeCreator {
             );
         }
         if ((mask & CREATES_STRONG) > 0) {
-            PotionType strongFirst = CauldronFluids.getPotion(CauldronMod.MODID, "strong_" + first);
-            PotionType strongSecond = CauldronFluids.getPotion(CauldronMod.MODID, "strong_" + last);
+            PotionType strongFirst = CauldronUtils.getPotion(CauldronMod.MODID, "strong_" + first);
+            PotionType strongSecond = CauldronUtils.getPotion(CauldronMod.MODID, "strong_" + last);
 
             registry.register(
                     CauldronUtils.defaultAmountRecipe(

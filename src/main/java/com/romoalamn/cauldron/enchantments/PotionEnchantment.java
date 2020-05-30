@@ -1,6 +1,6 @@
 package com.romoalamn.cauldron.enchantments;
 
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.setup.Config;
 import net.minecraft.enchantment.Enchantment;
@@ -88,7 +88,7 @@ public class PotionEnchantment extends Enchantment {
                 int uses = pot_eff.getInt("uses");
                 int max_uses = pot_eff.getInt("max_uses");
 
-                PotionType toApply = CauldronFluids.getPotion(id);
+                PotionType toApply = CauldronUtils.getPotion(id);
 
                 for (EffectInstance eff : toApply.getEffects()) {
                     if (eff.getPotion().isInstant()) {

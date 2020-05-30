@@ -4,7 +4,7 @@ import com.romoalamn.cauldron.blocks.CauldronBlock;
 import com.romoalamn.cauldron.blocks.CauldronBlocks;
 import com.romoalamn.cauldron.blocks.CauldronContainer;
 import com.romoalamn.cauldron.blocks.CauldronTile;
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
 import com.romoalamn.cauldron.enchantments.PotionEnchantment;
@@ -88,14 +88,14 @@ public class CauldronMod {
             new RegistryBuilder<CauldronBrewingRecipe>().add(
                     (IForgeRegistry.AddCallback<CauldronBrewingRecipe>) (owner, stage, id, obj, oldObj) -> {
 //                        LOGGER.info("Registry Add Called");
-                        CauldronFluids.registerBrewingRecipe(obj);
+                        CauldronUtils.registerBrewingRecipe(obj);
                     }
             )
                     .setName(new ResourceLocation("cauldron", "set_brewing_recipes"))
                     .setType(CauldronBrewingRecipe.class)
                     .create();
             new RegistryBuilder<PotionType>().add(
-                    (IForgeRegistry.AddCallback<PotionType>) (owner, stage, id, obj, oldObj) -> CauldronFluids.registerPot(obj)
+                    (IForgeRegistry.AddCallback<PotionType>) (owner, stage, id, obj, oldObj) -> CauldronUtils.registerPot(obj)
             ).setName(new ResourceLocation("cauldron", "register_potion_types"))
                     .setType(PotionType.class)
                     .create();

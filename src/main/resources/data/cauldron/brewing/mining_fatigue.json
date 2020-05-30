@@ -1,0 +1,26 @@
+{
+  "requires": "apotheosis",
+  "type": "cauldron:brew_corruption",
+  "recipe": {
+    "base": {
+      "potion_type": "cauldron:haste"
+    },
+    "long": {
+      "potion_type": "cauldron:long_haste"
+    },
+    "strong": {
+      "potion_type": "cauldron:strong_haste"
+    },
+    "output": {
+      "base": {
+        "potion_type": "cauldron:mining_fatigue"
+      },
+      "long": {
+        "potion_type": "cauldron:long_mining_fatigue"
+      },
+      "strong": {
+        "potion_type": "cauldron:strong_mining_fatigue"
+      }
+    }
+  }
+}

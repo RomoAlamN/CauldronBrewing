@@ -1,0 +1,16 @@
+{
+  "type": "cauldron:potion_list",
+  "requires": "apotheosis",
+  "potions": [
+    {
+      "name": "cauldron:luck",
+      "effects": [
+        {
+          "amplifier": 0,
+          "duration": 6000,
+          "effect": "minecraft:luck"
+        }
+      ]
+    }
+  ]
+}

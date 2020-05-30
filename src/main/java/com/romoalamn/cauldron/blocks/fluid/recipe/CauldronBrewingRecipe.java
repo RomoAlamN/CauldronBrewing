@@ -1,5 +1,6 @@
 package com.romoalamn.cauldron.blocks.fluid.recipe;
 
+import com.romoalamn.cauldron.blocks.fluid.FluidComponent;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -12,7 +13,7 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * This is the Fluidstack held in the cauldron. (Not actually.)
      * If this fluid is in the cauldron, we can check if the ingredient is proper
      */
-    CauldronUtils.FluidComponent input;
+    FluidComponent input;
     /**
      * This is the ingredient the player is holding in order to create the potion
      */
@@ -20,7 +21,7 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
     /**
      * this is the Fluid that is in the Cauldron after a successful recipe
      */
-    CauldronUtils.FluidComponent output;
+    FluidComponent output;
 
     RecipeStates state;
 
@@ -30,10 +31,10 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * @param ingredient the ingredient for the recipe
      * @param output the liquid in the cauldron after a successful brewing
      */
-    public CauldronBrewingRecipe(CauldronUtils.FluidComponent input, Ingredient ingredient, CauldronUtils.FluidComponent output) {
+    public CauldronBrewingRecipe(FluidComponent input, Ingredient ingredient, FluidComponent output) {
         this(input, ingredient, output, RecipeStates.HEATING);
     }
-    public CauldronBrewingRecipe(CauldronUtils.FluidComponent input, Ingredient ingredient, CauldronUtils.FluidComponent output, RecipeStates state){
+    public CauldronBrewingRecipe(FluidComponent input, Ingredient ingredient, FluidComponent output, RecipeStates state){
         this.input = input;
         this.ingredient = ingredient;
         this.output  = output;
@@ -55,11 +56,11 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * @param ingredient The item in the player's hand
      * @return the fluid that corresponds to the recipe above
      */
-    public CauldronUtils.FluidComponent getOutput(CauldronUtils.FluidComponent input, ItemStack ingredient) {
+    public FluidComponent getOutput(FluidComponent input, ItemStack ingredient) {
         if(isInput(input.potion) && isIngredient(ingredient) && input.amount > this.input.amount){
-            return new CauldronUtils.FluidComponent(getOutput().potion, getOutput().amount);
+            return new FluidComponent(getOutput().potion, getOutput().amount);
         }else{
-            return CauldronUtils.FluidComponent.EMPTY;
+            return FluidComponent.EMPTY;
         }
     }
 
@@ -67,7 +68,7 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * Gets the fluidstack that is the input
      * @return see description
      */
-    public CauldronUtils.FluidComponent getInput() {
+    public FluidComponent getInput() {
         return input;
     }
 
@@ -83,7 +84,7 @@ public class CauldronBrewingRecipe extends ForgeRegistryEntry<CauldronBrewingRec
      * Returns the hypothetical output of the recipe
      * @return see description
      */
-    public CauldronUtils.FluidComponent getOutput() {
+    public FluidComponent getOutput() {
         return output;
     }
 

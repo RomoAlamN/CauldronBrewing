@@ -1,6 +1,6 @@
 package com.romoalamn.cauldron.item;
 
-import com.romoalamn.cauldron.blocks.fluid.CauldronFluids;
+import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -47,7 +47,7 @@ public class CauldronItemPotion extends PotionItem {
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if(this.isInGroup(group)) {
-            for (PotionType typ : CauldronFluids.getPotionsSorted()) {
+            for (PotionType typ : CauldronUtils.getPotionsSorted()) {
                 ItemStack stack = new ItemStack(this);
                 PotionUtils.appendEffects(stack, typ.getEffects());
                 items.add(stack);
