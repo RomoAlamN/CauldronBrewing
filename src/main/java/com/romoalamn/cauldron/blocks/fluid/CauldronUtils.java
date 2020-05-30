@@ -9,6 +9,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
@@ -196,6 +197,24 @@ public class CauldronUtils {
             throw new IllegalArgumentException("Effect does not exist: " + eff);
         }
 
+    }
+
+    /**
+     * For use with the PotionEnchantmnet
+     * @param stack The itemstack to get the PotionType from
+     * @return the PotionType the id has, EMPTY if none
+     */
+    public static PotionType getPotionFromStack(ItemStack stack) {
+        CompoundNBT nbt = stack.getOrCreateTag();
+
+        if(!nbt.contains("potion_effect")){
+            return PotionType.EMPTY;
+        }
+        CompoundNBT potion_effect = nbt.getCompound("potion_effect");
+        if(potion_effect.contains("id")){
+            return CauldronUtils.getPotion(potion_effect.getString("id"));
+        }
+        return PotionType.EMPTY;
     }
 
     public static class DelegatedOptional<T> {

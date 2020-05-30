@@ -53,7 +53,7 @@ public class PotionEnchantment extends Enchantment {
      */
     @Override
     protected boolean canApplyTogether(Enchantment ench) {
-        return true;
+        return false;
     }
 
     private void removeEnchantmentFrom(ItemStack item) {
