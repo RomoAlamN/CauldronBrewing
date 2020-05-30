@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -229,22 +230,44 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                 int maxUses = Config.COMMON_CONFIG.maxUses.get();
                 if(!worldIn.isRemote) {
                     if (h.getPotion().potion.getEffects().size() > 0) {
-                        heldItem.addEnchantment(CauldronEnchantments.POTION_ENCHANTMENT, 1);
-                        CompoundNBT nbt = heldItem.getTag();
-                        CompoundNBT effectTag = new CompoundNBT();
-                        effectTag.putString("id", h.getPotion().potion.getRegistryName().toString());
-                        int level = 0;
-                        for (EffectInstance eff : h.getPotion().potion.getEffects()) {
-                            level += 1 + eff.getAmplifier();
+                        if (!EnchantmentHelper.getEnchantments(heldItem).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)) {
+                            heldItem.addEnchantment(CauldronEnchantments.POTION_ENCHANTMENT, 1);
+                            CompoundNBT nbt = heldItem.getTag();
+                            CompoundNBT effectTag = new CompoundNBT();
+                            effectTag.putString("id", h.getPotion().potion.getRegistryName().toString());
+                            int level = 0;
+                            for (EffectInstance eff : h.getPotion().potion.getEffects()) {
+                                level += 1 + eff.getAmplifier();
+                            }
+                            if (level < 1) level = 1;
+                            effectTag.putInt("uses", maxUses / level);
+                            effectTag.putInt("max_uses", maxUses / level);
+                            nbt.put("potion_effect", effectTag);
                         }
-                        if (level < 1) level = 1;
-                        effectTag.putInt("uses", maxUses / level);
-                        effectTag.putInt("max_uses", maxUses / level);
-                        nbt.put("potion_effect", effectTag);
-
                         h.drain(1000, IPotionHandler.PotionAction.EXECUTE);
                     }
                     createWorldUpdate(state, worldIn, pos, h);
+                }else{
+                    if(EnchantmentHelper.getEnchantments(heldItem).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)){
+                        // uh -oh
+                        worldIn.playSound(player, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                        worldIn.playSound(player, pos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1, 1.7f);
+
+                        double px = pos.getX() + 0.5;
+                        double py = pos.getY() + 1.2;
+                        double pz = pos.getZ() + 0.5;
+                        for(int i = 0; i < 20; i++){
+                            Random rand = worldIn.getRandom();
+                            double rx = px + rand.nextDouble() - 0.5;
+                            double ry = py + rand.nextDouble() * 0.3 - 0.15;
+                            double rz = pz + rand.nextDouble() - 0.5;
+
+                            double vx = rand.nextDouble() * 0.3 - .15;
+                            double vy = rand.nextDouble() * 0.3 - .15;
+                            double vz = rand.nextDouble() * 0.3 - .15;
+                            worldIn.addParticle(ParticleTypes.EXPLOSION, rx, ry, rz, vx, 0.01 + vy, vz);
+                        }
+                    }
                 }
                 return ActionResultType.SUCCESS;
             }
