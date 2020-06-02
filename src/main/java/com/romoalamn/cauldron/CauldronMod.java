@@ -24,6 +24,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -297,8 +298,11 @@ public class CauldronMod {
             if (EnchantmentHelper.getEnchantments(stack).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)) {
                 try {
                     PotionType type = CauldronUtils.getPotionFromStack(stack);
+                    CompoundNBT nbt = stack.getTag();
+                    CompoundNBT pot = nbt.getCompound("potion_effect");
                     String i18nStr = I18n.format("cauldron.desc." +  type.getRegistryName().getPath());
                     tooltip.add(new StringTextComponent(TextFormatting.LIGHT_PURPLE + i18nStr));
+                    tooltip.add(new StringTextComponent(TextFormatting.GRAY + String.format("%s/%s",  pot.getInt("uses"), pot.getInt("max_uses"))));
                 } catch (Exception e) {
                     LOGGER.warn("Failed to get item tooltip:", e);
                 }

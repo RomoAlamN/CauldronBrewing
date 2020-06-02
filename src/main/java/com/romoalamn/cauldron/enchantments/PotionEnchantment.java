@@ -105,7 +105,9 @@ public class PotionEnchantment extends Enchantment {
                 if (uses <= 0) {
                     removeEnchantmentFrom(item);
                 }
-                pot_eff.putInt("uses", uses - 1);
+                if(!user.getEntityWorld().isRemote) {
+                    pot_eff.putInt("uses", uses - 1);
+                }
 
             } else {
                 logger.warn("No potion id found on weapon.");
