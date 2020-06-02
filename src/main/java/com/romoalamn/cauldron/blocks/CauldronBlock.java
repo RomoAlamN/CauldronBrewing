@@ -201,7 +201,9 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                     h.fill(new FluidComponent(CauldronPotionTypes.WATER, 1000), IPotionHandler.PotionAction.EXECUTE);
                     if (!player.isCreative()) {
                         heldItem.shrink(1);
-                        player.dropItem(new ItemStack(Items.BUCKET), false);
+                        if (!player.addItemStackToInventory(new ItemStack(Items.BUCKET))) {
+                            player.dropItem(new ItemStack(Items.BUCKET), false);
+                        }
                     }
                     createWorldUpdate(state, worldIn, pos, h);
                     worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -228,7 +230,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
             // if we have extra content enabled, we can enchant items with the cauldron.
             if (Config.COMMON_CONFIG.extraContent.get() && h.getPotion().amount >= 1000) {
                 int maxUses = Config.COMMON_CONFIG.maxUses.get();
-                if(!worldIn.isRemote) {
+                if (!worldIn.isRemote) {
                     if (h.getPotion().potion.getEffects().size() > 0) {
                         if (!EnchantmentHelper.getEnchantments(heldItem).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)) {
                             heldItem.addEnchantment(CauldronEnchantments.POTION_ENCHANTMENT, 1);
@@ -247,8 +249,8 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                         h.drain(1000, IPotionHandler.PotionAction.EXECUTE);
                     }
                     createWorldUpdate(state, worldIn, pos, h);
-                }else{
-                    if(EnchantmentHelper.getEnchantments(heldItem).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)){
+                } else {
+                    if (EnchantmentHelper.getEnchantments(heldItem).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)) {
                         // uh -oh
                         worldIn.playSound(player, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0f, 1.0f);
                         worldIn.playSound(player, pos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1, 1.7f);
@@ -256,7 +258,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                         double px = pos.getX() + 0.5;
                         double py = pos.getY() + 1.2;
                         double pz = pos.getZ() + 0.5;
-                        for(int i = 0; i < 20; i++){
+                        for (int i = 0; i < 20; i++) {
                             Random rand = worldIn.getRandom();
                             double rx = px + rand.nextDouble() - 0.5;
                             double ry = py + rand.nextDouble() * 0.3 - 0.15;
