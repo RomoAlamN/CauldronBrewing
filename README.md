@@ -3,11 +3,13 @@ Allows you to brew potions in a modded cauldron. To create the cauldron, simply 
 vanilla cauldron in a crafting bench, with blaze powder underneath it. All recipes are
 the same as in Vanilla. 
 
+Now has an 'extra content' option, which enables you to imbue an item with the potion effect
+in a brewing cauldron. The feature is a work in progress, but is configurable and mostly complete. 
+Please report any issues you may have with the extra content enabled.
+
 ### Planned Features
 
 - Integration with JEI is on the roadmap.
-- Apotheosis integration was planned, but on hold until further notice.
-- Optional "Potion Sickness" and related debuffs for when you have too many potion effects. 
 - Higher tier cauldrons (For mixing potions?)
 - Potion mixing
 - Putting potions back into the cauldron. 
