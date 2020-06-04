@@ -27,6 +27,7 @@ the formats:
 ```
 potion.json
 {
+  "type": "cauldron:potion",
   "name": "modid:resource",
   "effects": [
   {
