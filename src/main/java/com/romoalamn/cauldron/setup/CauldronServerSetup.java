@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * This sets up the datapack listeners on the integrated and the dedicated servers
  */
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CauldronServerSetup {
     private static final Logger logger = LogManager.getLogger();
 

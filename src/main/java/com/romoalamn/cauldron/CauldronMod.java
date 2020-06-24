@@ -7,7 +7,6 @@ import com.romoalamn.cauldron.blocks.CauldronTile;
 import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
-import com.romoalamn.cauldron.enchantments.CauldronEnchantments;
 import com.romoalamn.cauldron.enchantments.PotionEnchantment;
 import com.romoalamn.cauldron.item.CauldronItemPotion;
 import com.romoalamn.cauldron.setup.CauldronCommonSetup;
@@ -15,26 +14,18 @@ import com.romoalamn.cauldron.setup.Config;
 import com.romoalamn.cauldron.setup.modcompat.DeferredActions;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -46,7 +37,6 @@ import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.Objects;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -289,24 +279,5 @@ public class CauldronMod {
 
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class MiscellaneousEvents {
-        @SubscribeEvent
-        public static void tooltipEvent(ItemTooltipEvent tooltipEvent) {
-            ItemStack stack = tooltipEvent.getItemStack();
-            List<ITextComponent> tooltip = tooltipEvent.getToolTip();
-            if (EnchantmentHelper.getEnchantments(stack).containsKey(CauldronEnchantments.POTION_ENCHANTMENT)) {
-                try {
-                    PotionType type = CauldronUtils.getPotionFromStack(stack);
-                    CompoundNBT nbt = stack.getTag();
-                    CompoundNBT pot = nbt.getCompound("potion_effect");
-                    String i18nStr = I18n.format("cauldron.desc." +  type.getRegistryName().getPath());
-                    tooltip.add(new StringTextComponent(TextFormatting.LIGHT_PURPLE + i18nStr));
-                    tooltip.add(new StringTextComponent(TextFormatting.GRAY + String.format("%s/%s",  pot.getInt("uses"), pot.getInt("max_uses"))));
-                } catch (Exception e) {
-                    LOGGER.warn("Failed to get item tooltip:", e);
-                }
-            }
-        }
-    }
+
 }
