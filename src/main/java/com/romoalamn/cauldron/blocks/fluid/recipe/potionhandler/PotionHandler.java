@@ -1,4 +1,4 @@
-package com.romoalamn.cauldron.blocks.fluid.recipe;
+package com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler;
 
 import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.FluidComponent;
@@ -15,6 +15,17 @@ public class PotionHandler implements IPotionHandler {
             currentContents.amount = newAmount;
         }
     }
+
+    @Override
+    public boolean isEmpty() {
+        return currentContents == FluidComponent.EMPTY || currentContents.potion == PotionType.EMPTY || currentContents.amount == 0;
+    }
+
+    @Override
+    public boolean isFull() {
+        return currentContents.amount == capacity;
+    }
+
     private void modifySafe(PotionType newType){
         if(currentContents.isEmpty()){
             currentContents = new FluidComponent(newType, currentContents.amount);

@@ -1,5 +1,7 @@
 package com.romoalamn.cauldron.blocks.fluid.recipe;
 
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.IPotionHandler;
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.PotionHandler;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -14,7 +16,9 @@ public class CauldronCapabilities {
     @CapabilityInject(IPotionHandler.class)
     public static Capability<IPotionHandler> POTION_HANDLER_CAPABILITY = null;
     public static void register(){
-        CapabilityManager.INSTANCE.register(IPotionHandler.class, new DefaultPotionHandlerStorage<>(), ()-> new PotionHandler(FluidAttributes.BUCKET_VOLUME));
+        CapabilityManager.INSTANCE.register(IPotionHandler.class,
+                new DefaultPotionHandlerStorage<>(),
+                ()-> new PotionHandler(FluidAttributes.BUCKET_VOLUME));
     }
     private static class DefaultPotionHandlerStorage<T extends IPotionHandler> implements Capability.IStorage<T> {
         /**
@@ -38,7 +42,7 @@ public class CauldronCapabilities {
         @Nullable
         @Override
         public INBT writeNBT(Capability<T> capability, T instance, Direction side) {
-            if(!(instance instanceof PotionHandler))
+            if(instance == null)
                 throw new RuntimeException("Derp.");
             CompoundNBT nbt = new CompoundNBT();
             PotionHandler potHandler = (PotionHandler) instance;
@@ -67,7 +71,7 @@ public class CauldronCapabilities {
          */
         @Override
         public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt) {
-            if(!(instance instanceof PotionHandler)){
+            if(instance == null){
                 throw new RuntimeException("Whaddup, IPotionHandler or otherwise");
             }
             CompoundNBT tags = (CompoundNBT) nbt;

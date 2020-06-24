@@ -1,8 +1,8 @@
 package com.romoalamn.cauldron.blocks;
 
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
-import com.romoalamn.cauldron.blocks.fluid.recipe.IPotionHandler;
-import com.romoalamn.cauldron.blocks.fluid.recipe.PotionHandler;
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.IPotionHandler;
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.PotionHandler;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

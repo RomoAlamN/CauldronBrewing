@@ -2,7 +2,12 @@ package com.romoalamn.cauldron.blocks;
 
 import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.FluidComponent;
-import com.romoalamn.cauldron.blocks.fluid.recipe.*;
+import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronBrewingRecipe;
+import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
+import com.romoalamn.cauldron.blocks.fluid.recipe.PotionTypes;
+import com.romoalamn.cauldron.blocks.fluid.recipe.RecipeStates;
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.IPotionHandler;
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.PotionHandler;
 import com.romoalamn.cauldron.enchantments.CauldronEnchantments;
 import com.romoalamn.cauldron.setup.Config;
 import net.minecraft.block.Block;
@@ -11,6 +16,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -32,6 +38,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -198,7 +205,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                 return ActionResultType.SUCCESS;
             } else if (heldItem.getItem() == Items.WATER_BUCKET) {
                 if (h.getPotion().isEmpty() && !worldIn.isRemote) {
-                    h.fill(new FluidComponent(CauldronPotionTypes.WATER, 1000), IPotionHandler.PotionAction.EXECUTE);
+                    h.fill(new FluidComponent(PotionTypes.water, 1000), IPotionHandler.PotionAction.EXECUTE);
                     if (!player.isCreative()) {
                         heldItem.shrink(1);
                         if (!player.addItemStackToInventory(new ItemStack(Items.BUCKET))) {
@@ -210,7 +217,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                 }
                 return ActionResultType.SUCCESS;
             } else if (heldItem.getItem() == Items.BUCKET) {
-                if (h.getPotion().potion == CauldronPotionTypes.WATER && h.getPotion().amount == 1000 /*&& !worldIn.isRemote*/) {
+                if (h.getPotion().potion == PotionTypes.water && h.getPotion().amount == 1000 /*&& !worldIn.isRemote*/) {
                     h.empty(IPotionHandler.PotionAction.EXECUTE);
                     if (!player.isCreative()) {
                         heldItem.shrink(1);
@@ -276,6 +283,49 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
         }
 
         return ActionResultType.PASS;
+    }
+
+    /**
+     * Called before the Block is set to air in the world. Called regardless of if the player's tool can actually collect
+     * this block
+     *
+     * @param worldIn
+     * @param pos
+     * @param state
+     * @param player
+     */
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (Config.COMMON_CONFIG.extraContent.get()) {
+            TileEntity ent = worldIn.getTileEntity(pos);
+            if(ent == null){
+                super.onBlockHarvested(worldIn, pos, state, player); ;
+                return;
+            }
+            ent.getCapability(CauldronCapabilities.POTION_HANDLER_CAPABILITY).ifPresent(h -> {
+                if (!h.isEmpty()) {
+                    makeAreaOfEffectCloud(h.getPotion(), pos, worldIn);
+                }
+            });
+            // play sound
+            worldIn.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        }
+        super.onBlockHarvested(worldIn, pos, state, player);
+    }
+
+    private void makeAreaOfEffectCloud(FluidComponent potion, BlockPos pos, IWorld world) {
+        AreaEffectCloudEntity aece = new AreaEffectCloudEntity((World) world, pos.getX(), pos.getY(), pos.getZ());
+        aece.setRadius(3.0f);
+        aece.setRadiusOnUse(-0.5f);
+        aece.setWaitTime(10);
+        aece.setRadiusPerTick(-aece.getRadius() / aece.getDuration());
+        for (EffectInstance effect : potion.potion.getEffects()) {
+            aece.addEffect(effect.getEffectInstance());
+        }
+        if (!potion.potion.getEffects().isEmpty()) {
+            aece.setColor(potion.potion.getEffects().get(0).getPotion().getLiquidColor());
+        }
+        world.addEntity(aece);
     }
 
     private <T> boolean contains(T[] toCheck, T search) {

@@ -1,4 +1,4 @@
-package com.romoalamn.cauldron.blocks.fluid.recipe;
+package com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler;
 
 import com.romoalamn.cauldron.blocks.fluid.FluidComponent;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
@@ -13,6 +13,9 @@ public interface IPotionHandler{
     FluidComponent empty(PotionAction action);
 
     FluidComponent getPotion();
+
+    boolean isEmpty();
+    boolean isFull();
     int getCapacity();
     enum PotionAction{
         SIMULATE(false), EXECUTE(true);

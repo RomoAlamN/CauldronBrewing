@@ -56,5 +56,6 @@ public class PotionTypes {
 
     public static final PotionType weakness = null;
     public static final PotionType long_weakness = null;
+    public static final PotionType water = null;
     public static final PotionType awkward = null;
 }

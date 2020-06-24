@@ -1,7 +1,7 @@
 package com.romoalamn.cauldron.blocks;
 
 import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
-import com.romoalamn.cauldron.blocks.fluid.recipe.IPotionHandler;
+import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.IPotionHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.potion.EffectInstance;
