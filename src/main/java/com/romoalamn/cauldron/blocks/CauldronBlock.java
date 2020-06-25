@@ -21,9 +21,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
@@ -45,6 +47,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -208,7 +211,9 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                     h.fill(new FluidComponent(PotionTypes.water, 1000), IPotionHandler.PotionAction.EXECUTE);
                     if (!player.isCreative()) {
                         heldItem.shrink(1);
-                        if (!player.addItemStackToInventory(new ItemStack(Items.BUCKET))) {
+                        if(heldItem.isEmpty()){
+                            player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
+                        }else{
                             player.dropItem(new ItemStack(Items.BUCKET), false);
                         }
                     }
@@ -231,6 +236,17 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
                     worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 }
                 return ActionResultType.SUCCESS;
+            } else if (heldItem.getItem() instanceof PotionItem && h.getPotion().amount < 1000){
+                List<EffectInstance> eff = PotionUtils.getEffectsFromStack(heldItem);
+                List<EffectInstance> inEff = h.getPotion().potion.getEffects();
+                if(eff.size() == inEff.size()){
+                    for(int i = 0; i < eff.size(); i++){
+                        if(!eff.get(i).equals(inEff.get(i))){
+                            return ActionResultType.PASS;
+                        }
+                    }
+                    h.fill(250, IPotionHandler.PotionAction.EXECUTE);
+                }
             }
             //endregion
 
@@ -335,19 +351,17 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
         return false;
     }
 
-    private boolean checkForCoolingBlock(World worldIn, BlockPos pos) {
+    public boolean checkForCoolingBlock(World worldIn, BlockPos pos) {
         BlockState state = worldIn.getBlockState(pos);
-        boolean cont = contains(coolingBlocks, state.getBlock());
-//        LOGGER.info("Is block cooling? {}", cont ? "yes": "no");
-        return cont;
+        //        LOGGER.info("Is block cooling? {}", cont ? "yes": "no");
+        return contains(coolingBlocks, state.getBlock());
     }
 
-    private boolean checkForHeatingBlock(World worldIn, BlockPos pos) {
+    public boolean checkForHeatingBlock(World worldIn, BlockPos pos) {
         BlockState state = worldIn.getBlockState(pos);
-        boolean cont = contains(heatingBlocks, state.getBlock());
-//        LOGGER.info("Is block heating? {}", cont? "yes" : "no");
+        //        LOGGER.info("Is block heating? {}", cont? "yes" : "no");
 //        LOGGER.info("What is it? {}", state.getBlock());
-        return cont;
+        return contains(heatingBlocks, state.getBlock());
     }
 
     private void createWorldUpdate(BlockState state, World worldIn, BlockPos pos, IPotionHandler h) {
@@ -355,6 +369,7 @@ public class CauldronBlock extends net.minecraft.block.CauldronBlock {
         worldIn.setBlockState(pos, newState);
         worldIn.notifyBlockUpdate(pos, state, state, 3);
     }
+
 }
 
 

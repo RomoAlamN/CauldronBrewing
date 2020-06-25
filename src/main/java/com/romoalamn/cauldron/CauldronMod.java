@@ -2,7 +2,6 @@ package com.romoalamn.cauldron;
 
 import com.romoalamn.cauldron.blocks.CauldronBlock;
 import com.romoalamn.cauldron.blocks.CauldronBlocks;
-import com.romoalamn.cauldron.blocks.CauldronContainer;
 import com.romoalamn.cauldron.blocks.CauldronTile;
 import com.romoalamn.cauldron.blocks.fluid.CauldronUtils;
 import com.romoalamn.cauldron.blocks.fluid.PotionType;
@@ -13,18 +12,14 @@ import com.romoalamn.cauldron.setup.CauldronCommonSetup;
 import com.romoalamn.cauldron.setup.Config;
 import com.romoalamn.cauldron.setup.modcompat.DeferredActions;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,8 +31,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Objects;
 
 // The value here should match an entry in the META-INF/mods.toml file
 
@@ -149,22 +142,6 @@ public class CauldronMod {
 
             //noinspection ConstantConditions
             tileRegistryEvent.getRegistry().register(TileEntityType.Builder.create(CauldronTile::new, CauldronBlocks.cauldronBlock).build(null).setRegistryName("cauldron"));
-        }
-
-        /**
-         * Register container
-         *
-         * @param containerRegistryEvent The event we use to register Containers
-         */
-        @SubscribeEvent
-        public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> containerRegistryEvent) {
-            containerRegistryEvent.getRegistry().register(IForgeContainerType.create((
-                    (windowId, inv, data) -> {
-                        BlockPos pos = data.readBlockPos();
-
-                        return new CauldronContainer(windowId, Objects.requireNonNull(Minecraft.getInstance().world), pos, inv);
-                    }))
-                    .setRegistryName("cauldron"));
         }
 
         @SubscribeEvent

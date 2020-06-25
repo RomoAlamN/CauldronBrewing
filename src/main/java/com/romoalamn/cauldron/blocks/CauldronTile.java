@@ -4,20 +4,17 @@ import com.romoalamn.cauldron.blocks.fluid.recipe.CauldronCapabilities;
 import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.IPotionHandler;
 import com.romoalamn.cauldron.blocks.fluid.recipe.potionhandler.PotionHandler;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -32,9 +29,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
+import java.util.Random;
+
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class CauldronTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class CauldronTile extends TileEntity implements ITickableTileEntity {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -50,7 +49,33 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
 
     @Override
     public void tick() {
+        if (this.world.isRemote) {
+            IParticleData data = ParticleTypes.BUBBLE;
+            Random rand = this.world.getRandom();
+            float x = this.world.getRandom().nextFloat();
+            float z = this.world.getRandom().nextFloat();
 
+            class Holder {
+                int color;
+                int amt;
+                boolean shouldCreateParticle;
+            }
+            Holder h = new Holder();
+            potions.ifPresent(pots -> {
+                h.color = PotionUtils.getPotionColorFromEffectList(pots.getPotion().potion.getEffects());
+                h.amt = pots.getPotion().amount;
+                h.shouldCreateParticle = pots.getPotion().amount > 0;
+            });
+            if (!h.shouldCreateParticle) return;
+            if (!CauldronBlocks.cauldronBlock.checkForHeatingBlock(world, getPos().down())
+                    || CauldronBlocks.cauldronBlock.checkForCoolingBlock(world, getPos().down())) {
+                return;
+            }
+            int v1 = h.color >> 16 & 255;
+            int v2 = h.color >> 8 & 255;
+            int v3 = h.color & 255;
+            world.addOptionalParticle(data, getPos().getX() + x, this.getPos().getY()+((float)h.amt / 1000f) * 0.8 + 0.2, this.getPos().getZ() + z,0,0.1,0);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -59,7 +84,7 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
         CompoundNBT invTag = tag.getCompound("inv");
         handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
         CompoundNBT fluidTag = tag.getCompound("potion");
-        potions.ifPresent(h -> ((PotionHandler)h).readFromNBT(fluidTag));
+        potions.ifPresent(h -> ((PotionHandler) h).readFromNBT(fluidTag));
         super.read(tag);
     }
 
@@ -72,9 +97,9 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
             CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
             tag.put("inv", compound);
         });
-        potions.ifPresent(h-> {
+        potions.ifPresent(h -> {
             CompoundNBT t = new CompoundNBT();
-            ((PotionHandler)h).writeToNBT(t);
+            ((PotionHandler) h).writeToNBT(t);
             tag.put("potion", t);
         });
         return super.write(tag);
@@ -97,7 +122,8 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
             }
         };
     }
-    private IPotionHandler createPotionHandler(){
+
+    private IPotionHandler createPotionHandler() {
         return new PotionHandler(FluidAttributes.BUCKET_VOLUME);
     }
 
@@ -107,22 +133,10 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return handler.cast();
-        }else if(cap == CauldronCapabilities.POTION_HANDLER_CAPABILITY) {
+        } else if (cap == CauldronCapabilities.POTION_HANDLER_CAPABILITY) {
             return potions.cast();
         }
         return super.getCapability(cap, side);
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent(Objects.requireNonNull(getType().getRegistryName()).getPath());
-    }
-
-    @Nullable
-    @Override
-    public Container createMenu(int id, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
-        return new CauldronContainer(id, Objects.requireNonNull(world), pos, playerInventory);
     }
 
     /**
@@ -146,7 +160,7 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void handleUpdateTag(CompoundNBT tag) {
-        if(!world.chunkExists(getPos().getX() >> 4, getPos().getZ() >> 4)){
+        if (!world.chunkExists(getPos().getX() >> 4, getPos().getZ() >> 4)) {
             return;
         }
         super.handleUpdateTag((CompoundNBT) tag.get("basic"));
@@ -176,10 +190,10 @@ public class CauldronTile extends TileEntity implements ITickableTileEntity, INa
      */
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if(!world.chunkExists(getPos().getX() >>4, getPos().getZ() >> 4)){
+        if (!world.chunkExists(getPos().getX() >> 4, getPos().getZ() >> 4)) {
             return;
         }
-        CompoundNBT caul =  (CompoundNBT) pkt.getNbtCompound().get("cauldron");
+        CompoundNBT caul = (CompoundNBT) pkt.getNbtCompound().get("cauldron");
         this.read(Objects.requireNonNull(caul));
         Objects.requireNonNull(world).setBlockState(getPos(), getBlockState().cycle(CauldronBlock.UPDATE));
         logger.info("Received Update Packet from server! {!}");
